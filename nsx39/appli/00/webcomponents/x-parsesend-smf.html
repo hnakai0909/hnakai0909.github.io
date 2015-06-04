@@ -1,0 +1,198 @@
+<!--
+/*
+* x-parsesend-smf.html v1.0.0 by @ryoyakawai
+* Copyright (c) 2014 Yamaha Corporation. All rights reserved.
+*/
+-->
+<polymer-element name="x-parsesend-smf" attributes="id height buttonname00 buttonname01 smffile00 smffile01 remove add confeventname">
+  <template>
+    <style type="text/css">
+    .smfbutton {
+      color:rgba(0,0,0,0.3); 
+    }
+    .btn {
+      display: inline-block;
+      padding: 6px 12px;
+      margin-bottom: 0;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 1.428571429;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      -webkit-user-select: none;
+      margin-left:3px;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-radius:50px;
+      transition:0.3s;
+    }
+    .btn.off {
+      color:rgba(150, 150, 150, 1);
+      background-color:#ffffff;
+      border-color:#adadad;
+      text-shadow: 0px 0px 4px rgba(196, 216, 215, 1);
+      box-shadow: 0px 0px 3px 3px rgba(220, 220, 220, 1); 
+    }
+    .btn.on {
+      color:#ffffff;
+      background-color:#39b3d7;
+      border-color:#269abc;
+      text-shadow: 0px 0px 1px rgba(200, 200, 200, 0.5);
+      box-shadow: 0px 0px 3px 3px rgba(220, 220, 220, 1); 
+    }
+    .btn.onprogress {
+      border-width:2px;
+      font-weight:bold;
+      -webkit-animation: onpani00 1.5s ease -1s infinite alternate;
+    }
+    @-webkit-keyframes onpani00 {
+      0%   { color: #bec8d1; border-color: #bec8d1; }
+      25%  { color: #c3e5e7; border-color: #c3e5e7; }
+      50%  { color: #86cecb; border-color: #86cecb; }
+      75%  { color: #137a7f; border-color: #137a7f; }
+      100% { color: #e12885; border-color: #e12885; }
+    }
+    .btn:active { outline:0; }
+    .btn:focus { outline:0; }
+    .btn:hover:not([disabled="disabled"]) {
+      cursor: pointer;
+      margin-left:0px;
+      border-width:4px;
+      font-weight:bold;
+    }
+    </style>
+    <button id="smfbutton" class="btn btn-default smfbutton off"></button>
+  </template>
+  <script type="text/javascript" src="./smf.js"></script>
+  <script type="text/javascript">
+  Polymer('x-parsesend-smf', {
+      get: function(name) {
+          return this[name];
+      },
+      isClassContainsInButton: function(value) {
+          return this.$["smfbutton"].classList.contains(value);
+      },
+      sendSmfToDevice: function(midiout, ingicatorEventName, smfProgressEventName) {
+          if(midiout==null) {
+              console.error("[sendSmfToDevice] midiout is not specified.");
+          } else {
+              this.startGetSendSmf(midiout, this.smffile, ingicatorEventName, smfProgressEventName);
+          }
+      },
+      sendSmfToDeviceD: function() {
+          if(this.midiout==null) {
+              console.error("[sendSmfToDeviceD] midiout is not set. Use setSendInformation() to specify midiout.");
+          } else {
+              this.startGetSendSmf(this.midiout, this.smffile, this.ingicatorEventName, this.smfProgressEventName);
+          }
+      },
+      setSendInformation: function(midiout, ingicatorEventName, smfProgressEventName) {
+          this.midiout=midiout;
+          this.$["smfbutton"].removeAttribute("disabled");
+          this.ingicatorEventName=ingicatorEventName;
+          this.smfProgressEventName=smfProgressEventName;
+      },
+      cancelUpdate: function(event){
+      },
+      ready: function() {
+          this.smffile=this.smffile00;
+          this.$["smfbutton"].innerHTML=this.buttonname00;
+          this.$["smfbutton"].style.setProperty("height", this.height+"px");
+
+          if(this.confeventname!=null && this.confeventname!="") {
+              this.$["smfbutton"].addEventListener("mousedown", this.beginSendProcess.bind(this), false);
+              this.$["smfbutton"].addEventListener("touchstart", this.beginSendProcess.bind(this), false);
+          } else {
+              this.$["smfbutton"].addEventListener("mousedown", this.sendSmfToDeviceD.bind(this), false);
+              this.$["smfbutton"].addEventListener("touchstart", this.sendSmfToDeviceD.bind(this), false);
+              this.$["smfbutton"].setAttribute("disabled", "disabled");
+          }
+
+          if(this.remove!=null && this.remove!="") this.remove=this.remove.split(":::");
+          if(this.add!=null && this.add!="") this.add=this.add.split(":::");
+
+          this.fire("polymer-ready-dmy", {"id": this.id});
+      },
+      buttonName00: "Button00",
+      buttonName01: "Button01",
+      height: null,
+      remove: null,
+      add: null,
+      midiout: null,
+      confieventname: null,
+      beginSendProcess: function() {
+          this.fire(this.confeventname, {"id": this.id});
+      },
+      buttonCtrl: function() {
+          var elem=this.$["smfbutton"];
+          if(this.buttonname01==null || this.buttonname01=="" || this.buttonname01=="Button01") {
+              if(elem.classList.contains("onprogress")) {
+                  elem.className=elem.className.replace(" onprogress", "");
+              }
+              return;
+          }
+          if(elem.classList.contains("on")) {
+              this.smffile=this.smffile00;
+              this.$["smfbutton"].innerHTML=this.buttonname00;
+              elem.className="btn btn-info off";
+          } else
+          if(elem.classList.contains("off")) {
+              this.smffile=this.smffile01;
+              this.$["smfbutton"].innerHTML=this.buttonname01;
+              elem.className="btn btn-default on";
+          }
+      },
+      onProgress: function() {
+          var elem=this.$["smfbutton"];
+          if(elem.classList.contains("onprogress")) {
+              elem.className.replace(" onprogress", "");
+              elem.removeAttribute("disabled");
+          } else {
+              elem.className+=" onprogress";
+              elem.setAttribute("disabled", "disabled");
+          }
+      },
+      startGetSendSmf: function(midiout, smffile, ingicatorEventName, smfProgressEventName) {
+          this.onProgress();
+          var xhr = new XMLHttpRequest();
+          var smffile = smffile;
+          var smf = new SMF();
+
+          var self=this;
+          xhr.onreadystatechange = function() {
+              if (xhr.readyState >= 4) {
+                  if (xhr.status == 200) {
+                      var i = 0;
+                      var len = xhr.response.byteLength;
+                      smf.read(xhr.response);
+                      smf.addMidiEventListener(function(midi) {
+                          midiout.send(midi);
+                          if(ingicatorEventName!=null) self.fire(ingicatorEventName, {"midimsg": midi});
+                      });
+                      smf.addProgressListener(function(t, last) {
+                          var ratio = (100 * t / last) | 0;
+                          if(smfProgressEventName!=null) self.fire(smfProgressEventName, {"ratio": ratio, "id": self.id.split("_").pop()});
+                          if(ratio>=100) {
+                              self.onProgress();
+                              setTimeout(function(){
+                                  self.buttonCtrl(); // Update Button Information
+                              }, 1000);
+                          }
+                      });
+                      smf.play();
+                  } else {
+                    console.error("[http status code] ", xhr.status);      
+                  }
+              }
+          };
+          xhr.open('GET', smffile);
+          xhr.overrideMimeType('text/plain; charset=x-user-defined');
+          xhr.responseType = 'arraybuffer';
+          xhr.send(null);
+      }
+  });
+  </script>
+</polymer-element>
