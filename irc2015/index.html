@@ -1,0 +1,34 @@
+﻿<DOCTYPE !html>
+<html>
+ <head>
+  <meta charset="UTF-8">
+  <link rel="shortcut icon" href="./favicon.ico">
+  <link rel="apple-touch-icon" href="./favicon.png">
+  <title>
+   知能ロボコン2015タイマー
+  </title>
+  <script type="text/javascript" language="javascript">
+   <!--
+    function redraw(){
+     now = new Date();
+     ircday1 = new Date(2015,6-1,13,10,0,0,0);
+     remain = ircday1 - now;
+     md=now.getDate();h=now.getHours();m=now.getMinutes();s=now.getSeconds();ms=now.getMilliseconds();
+     ld=Math.round(remain/1000/60/60/24)
+     lh=Math.round(remain/1000/60/60)%24;lm=Math.round(remain/1000/60)%60;ls=Math.round(remain/1000)%60;lms=remain%1000;
+     document.getElementById("nowtime").innerHTML="現在時刻: "+("00"+h).slice(-2)+"時"+("00"+m).slice(-2)+"分"+("00"+s).slice(-2)+"秒"
+     document.getElementById("timer").innerHTML=ld+"日"+("00"+lh).slice(-2)+"時間"+("00"+lm).slice(-2)+"分"+("00"+ls).slice(-2)+"秒"
+    }
+   -->
+  </script>
+ </head>
+ <body onload="setInterval('redraw()',33)">
+  <div style="font-size:2em;text-align:center;">
+   知能ロボコン1日目10:00まで
+  </div>
+  <div id="timer" style="font-size:4em;text-align:center;padding:16px;">
+  </div>
+  <div id="nowtime" style="font-size:4em;text-align:center;padding:16px;">
+  </div>
+ </body>
+</html>

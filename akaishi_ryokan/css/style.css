@@ -1,0 +1,113 @@
+﻿@charset "utf-8";
+
+*{
+	font-family:"ヒラギノ明朝","ＭＳ 明朝",serif;
+}
+
+h1{
+	background:url(./../img/redstone.png) no-repeat 0px;
+	padding:16px 0px 8px 40px;
+	margin:0px 8px 0px 8px;
+	border-bottom: 1px solid red;
+}
+
+body{
+	width:800px;
+	margin:0px auto;
+	background-color:#600;
+}
+
+#header{
+	height:150px;
+	background:url(./../img/top.png) no-repeat;
+	position:relative;
+}
+
+.tone1{
+	text-shadow: 2px 2px 2px #BBB;
+	background-color: rgba(255,255,255,0.5);
+}
+#menubar td {  
+	width:160px;
+	height:40px;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(45%, #fe1a00), color-stop(60%, #ce0100) );
+	background:-moz-linear-gradient( center top, #fe1a00 45%, #ce0100 60% );
+	background:-ms-linear-gradient( top, #fe1a00 45%, #ce0100 60% );
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	border-radius:4px;
+	border:1px solid #d83526;
+} 
+
+#menubar td:hover{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(45%, #ce0100), color-stop(60%, #fe1a00) );
+	background:-moz-linear-gradient( center top, #ce0100 45%, #fe1a00 60% );
+	background:-ms-linear-gradient( top, #ce0100 45%, #fe1a00 60% );
+} 
+
+table a{
+	padding:10px;
+	height:100%;
+	display: block;
+	color:#FFF;
+	text-decoration:none;
+}
+
+#contents{
+	margin:0px;
+	background-color:#FFF;
+}
+
+#comment{
+	margin:0px;
+	padding:8px;
+	font-size:1.4em;
+}
+
+#footer{
+	padding:8px 16px;
+	background-color:#000;
+	color:#A22;
+	line-height:1.5em;
+}
+
+#footer a{
+	color:#F44;
+}
+
+#example_1_container {
+
+    width:800px;
+
+    height:450px;
+
+}
+
+
+
+#example_1_container .easy_slides_caption {
+
+    width:794px;
+
+    height:100px;
+
+    padding: 10px 0 0 10px;
+
+}
+
+.slicap{
+	font-family:"ヒラギノ明朝","ＭＳ 明朝",serif;
+	font-size:1.5em;
+}
+
+.hbig{
+	font-size:2em;
+}
+
+.gare{
+	width:400px;
+}
+
+#gar td img{
+	width:395px;
+}

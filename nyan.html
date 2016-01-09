@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>猫語ジェネレータ</title>
+<script><!--
+nyan=["にゃん","にゃあ","にゃ","にゃー","にゃお","にゃーん"];
+separator=["、","。","！","？","…"];
+function gen(){
+var text="";
+n=Math.floor(Math.random()*(100+1)+10);
+for(i=0;i<n;i++){
+r=Math.random();
+if(r>0.3){
+ text+=nyan[Math.floor(Math.random()*(nyan.length))];
+}else{
+ text+=separator[Math.floor(Math.random()*(separator.length))];
+}
+}
+document.getElementById("box").innerHTML=""+text;
+}
+--></script>
+<body>
+<button onclick="gen()"><h1>生成</h1></button>
+<div id="box"></div>
+</body>
+</html>
