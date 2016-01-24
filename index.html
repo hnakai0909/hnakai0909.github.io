@@ -1,93 +1,179 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="./style.css">
-  <title>
-    hnakai0909.github.io
-  </title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>hnakai</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="./style.css" rel="stylesheet">
+
 </head>
 
 <body>
-  <table id="badge"><tbody>
-    <tr>
-      <td rowspan="4">
-        <img src="./img/icon4.png" alt="icon" \>
-      </td>
-      <td colspan="4" id="myname1">
-        hnakai
-      </td>
-    </tr>
-    <tr>
-      <td colspan="4" id="myname2">
-        hnakai0909
-      </td>
-    </tr>
-    <tr>
-      <td colspan="4" id="myname3">
-        /eitʃinakai/
-        <audio src="audio/hnakai_pronounce.mp3" controls>(えいちなかい)</audio>
-      </td>
-    </tr>
-    <tr>
-      <td><img src="./img/icon0.png" alt="icon" \></td>
-      <td><img src="./img/icon1.png" alt="icon" \></td>
-      <td><img src="./img/icon2.png" alt="icon" \></td>
-      <td><img src="./img/icon3.png" alt="icon" \></td>
-    </tr>
-  </tbody></table>
-  <div id="linklist">
-    <div id="info">
-      ただいま改装準備中...
-      <br /> 匠による見事な改装にご期待ください..?
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">hnakai</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
     </div>
-    <div id="twitter">
-      Twitter : <a href="http://twitter.com/hnakai0909">@hnakai0909</a>
-    </div>
-    <div id="github">
-      Github : <a href="http://github.com/hnakai0909">hnakai0909</a>
-    </div>
-    <div id="email">
-      e-mail : hnakai0909
-      <img alt="[at]" src="./img/atmark.png" style="margin:4px;">yahoo
-      <img alt="[dot]" src="./img/dot.png">co
-      <img alt="[dot]" src="./img/dot.png">jp
-    </div>
-    <div id="hateblo">
-      hateblo : <a href="http://hnakai0909.hatenablog.com/">hnakai0909’s blog</a>
-      <span style="color:#47a89c"></span>
-    </div>
-    <div id="blog">
-      blog : <a href="http://elecprog.blog.fc2.com/">えれくぷろぐぶろぐ。</a>
-      <span style="color:#BBB">(放置)</span>
-    </div>
-    <div id="niconico">
-      niconico : <a href="http://nicovideo.jp/mylist/31513467">mylist/31513467</a>
-    </div>
-    <div id="soundcloud">
-      soundcloud : <a href="https://soundcloud.com/hnakai0909">hnakai0909</a>
-    </div>
-    <div id="amazon">
-      Amazon : <a href="https://www.amazon.co.jp/registry/wishlist/2WTYONUKWLNR/">wishlist</a>
-    </div>
-    <div id="spec">
-      <h2>introduce</h2>
-      <h3>birth / age / grade:</h3>
-      1996.09.09 / 19歳 / 大学1年
-      <h3>interest:</h3>
+  </nav>
 
-      プログラミング...HSP,プチコン,C etc,電子工作,鉄道,音楽(MIDI打ち込み)
-      <br>
-      <h3>member of:</h3>
-      電気通信大学学部生,工学研究部,ロボメカ工房ランサー部隊,某電気・物理系部活OB,
-      <br> 2013文化祭HP担当,Minecraft...赤石塾生/はるアイコン鯖er
-      <br>
-      <br>
-      <br>
+  <div id="badge" class="container">
+    <div class="row">
+    <div class="col-sm-6 col-xs-12">
+      <img src="./img/icon4.png" alt="icon" \>
+    </div>
+    <div class="col-sm-6 col-xs-12">
+      <table>
+        <tbody>
+          <tr>
+            <td colspan="4" id="myname1">
+              hnakai
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" id="myname2">
+              hnakai0909
+            </td>
+          </tr>
+          <tr>
+            <td colspan="4" id="myname3">
+              /eitʃinakai/<br>
+              <audio src="audio/hnakai_pronounce.mp3" controls>(えいちなかい)</audio>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img src="./img/icon0.png" alt="icon" \>
+            </td>
+            <td>
+              <img src="./img/icon1.png" alt="icon" \>
+            </td>
+            <td>
+              <img src="./img/icon2.png" alt="icon" \>
+            </td>
+            <td>
+              <img src="./img/icon3.png" alt="icon" \>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     </div>
   </div>
+  <div id="linklist">
+    <div class="row">
+      <div class="col col-md-6">
+        <a href="http://twitter.com/hnakai0909">
+          <div id="twitter" class="col-inner">
+            Twitter : @hnakai0909
+          </div>
+        </a>
+      </div>
+      <div class="col col-md-6">
+        <a href="http://github.com/hnakai0909">
+          <div id="github" class="col-inner">
+            Github : hnakai0909
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-md-6">
+        <div id="email" class="col-inner">
+          e-mail : hnakai0909
+          <img alt="[at]" src="./img/atmark.png" style="margin:4px;">yahoo
+          <img alt="[dot]" src="./img/dot.png">co
+          <img alt="[dot]" src="./img/dot.png">jp
+        </div>
+      </div>
+      <div class="col col-md-6">
+        <a href="http://hnakai0909.hatenablog.com/">
+          <div id="hateblo" class="col-inner">
+            hateblo : hnakai0909’s blog
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-md-6">
+        <a href="http://elecprog.blog.fc2.com/">
+          <div id="blog" class="col-inner">
+            blog : えれくぷろぐぶろぐ。
+            <span style="color:#BBB">(放置)</span>
+          </div>
+        </a>
+      </div>
+      <div class="col col-md-6">
+        <a href="http://nicovideo.jp/mylist/31513467">
+          <div id="niconico" class="col-inner">
+            niconico : mylist/31513467
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col col-md-6">
+        <a href="https://soundcloud.com/hnakai0909">
+          <div id="soundcloud" class="col-inner">
+            soundcloud : hnakai0909
+          </div>
+        </a>
+      </div>
+      <div class="col col-md-6">
+        <a href="https://www.amazon.co.jp/registry/wishlist/2WTYONUKWLNR/">
+          <div id="amazon" class="col-inner">
+            Amazon : wishlist
+          </div>
+        </a>
+      </div>
+    </div>
+    </a>
+  </div>
+  <div id="spec">
+    <h2>introduce</h2>
+    <h3>birth / age / grade:</h3>
+    1996.09.09 / 19歳 / 大学1年
+    <h3>interest:</h3>
+
+    プログラミング...HSP,プチコン,C etc,電子工作,鉄道,音楽(MIDI打ち込み)
+    <br>
+    <h3>member of:</h3>
+    電気通信大学学部生,工学研究部,ロボメカ工房ランサー部隊,某電気・物理系部活OB,
+    <br> 2013文化祭HP担当,Minecraft...赤石塾生/はるアイコン鯖er
+    <br>
+    <br>
+    <br>
+  </div>
+  </div>
+
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script src="js/jquery-2.2.0.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+
 </body>
 
 </html>

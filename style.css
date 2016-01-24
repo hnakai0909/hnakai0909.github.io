@@ -1,19 +1,21 @@
 body {
   background: rgba(250, 250, 240, 1);
 }
-body a {
+/*body a {
   color: #00E;
   text-decoration: none;
   border-radius: 4px;
   border: 2px solid #00A;
-}
-table#badge {
-  margin: auto;
+}*/
+#badge {
   text-align: center;
   border-collapse: collapse;
   border: 0px;
-  height: 384px;
-  width: 768px;
+  /*height: 384px;
+  width: 384px;*/
+}
+#badge table{
+  margin:auto;
 }
 #badge td{
   border: 0px;
@@ -22,7 +24,7 @@ table#badge {
   /* font-family: sans-serif; */
 }
 #myname1 {
-  font-size: 72px;
+  font-size: 64px;
   height: 96px;
   background: rgb(180,255,255);
 }
@@ -32,20 +34,25 @@ table#badge {
   background: rgb(205,255,255);
 }
 #myname3 {
-  font-size: 40px;
+  font-size: 32px;
   height: 96px;
   background: rgb(230,255,255);
 }
 #linklist {
   clear: both;
   margin: auto;
+  padding:32px;
   text-align: center;
-  font-size: 2.5em;
+  font-size: 32px;
 }
 #linklist div {
-  margin: 32px;
-  padding: 16px;
   border-radius: 8px;
+}
+.col{
+  margin-bottom:16px;
+}
+.col-inner {
+  padding: 16px;
 }
 #twitter {
   border: 4px solid rgba(0, 170, 240, 1);
@@ -83,7 +90,6 @@ table#badge {
   background: rgba(252, 155, 24, 0.3) url(./img/amazon.png) no-repeat 40px bottom;
 }
 #spec {
-  font-size: 0.5em;
   border: 4px solid rgba(0, 0, 0, 1);
   background: rgba(255, 255, 255, 0.3);
 }
