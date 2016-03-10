@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -85,6 +85,7 @@
       ];
       var song = new Array(suumo.length); 
       var song_p = 0;
+      var text = "";
 
       // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
       // http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/audio
@@ -162,10 +163,14 @@
         var buttons = document.querySelectorAll('button');
         for (var i = 0; i < buttons.length; i++) {
           buttons[i].addEventListener('click', function() {
+            if (this.id == "tweet2") {
+              window.open('http://twitter.com/?status='+encodeURIComponent("あ!スーモ! - 「"+text+"」 - http://hnakai0909.github.io/works/suumo/"));
+              return;
+            }
             // Get base time
             var t0 = context.currentTime;
 
-            var text = "";
+            text = "";
             song_p = 0;
 
             //https://bost.ocks.org/mike/shuffle/
@@ -242,6 +247,7 @@
   <div id="sorry" style="color:#888">正直著作権etc的にいろいろアウトです。</div>
   <a class="twitter-share-button" href="https://twitter.com/share" data-url="http://hnakai0909.github.io/works/suumo/" data-size="large">
 Tweet</a>
+  <button type="button" id="tweet2" style="width:200px;height:40px;">ツイート(スーモ文字列を含める)</button>
 </body>
 
 </html>
