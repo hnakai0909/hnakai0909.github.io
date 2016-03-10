@@ -35,14 +35,36 @@
             "スモ🌚", "スモ🌝", "スモ🌚", "スモ🌝",
             "スモ🌚", "スモ🌝", "ス〜〜〜モ⤵🌞"
           ];
-   
+          var song = new Array(suumo.length);
+          var text = "";
+
+          //https://bost.ocks.org/mike/shuffle/
+          var m = suumo.length, t, i;
+          for (i = 0; i < m; i++) {
+            song[i] = i;
+          }
+          // While there remain elements to shuffle…
+          while (m) {
+            // Pick a remaining element…
+            i = Math.floor(Math.random() * m--);
+
+            // And swap it with the current element.
+            t = song[m];
+            song[m] = song[i];
+            song[i] = t;
+          }
+          for (i = 0; i < m; i++) {
+            text += suumo[n];
+          }
+
+          document.getElementById("box").innerHTML = "" + text;   
           // for the instances of AudioBuffer
           var buffers = new Array(suumo.length);
    
           // for the instances of AudioBufferSourceNode
           var sources = new Array(suumo.length);
    
-          //var interval = 0.5;  // sec
+          var interval;  // sec
    
           // Create original event
           var event = document.createEvent('Event');
@@ -116,28 +138,27 @@
    
                   for (var i = 0, len = buffers.length; i < len; i++) {
                       // Create the instance of AudioBufferSourceNode
-                      sources[i] = context.createBufferSource();
+                      sources[song[i]] = context.createBufferSource();
    
                       // for legacy browsers
-                      sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
-                      sources[i].stop  = sources[i].stop  || sources[i].noteOff;
+                      sources[song[i]].start = sources[song[i]].start || sources[song[i]].noteGrainOn;  // noteGrainOn
+                      sources[song[i]].stop  = sources[song[i]].stop  || sources[song[i]].noteOff;
    
                       // Set the instance of AudioBuffer
-                      sources[i].buffer = buffers[i];
+                      sources[song[i]].buffer = buffers[song[i]];
    
                       // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
-                      sources[i].connect(gain);
+                      sources[song[i]].connect(gain);
                       gain.connect(context.destination);
 
-                      interval = sources[i].buffer.duration - 0.05;
-                      sources[i].start(t0, 0, interval);
-                      sources[i].stop(t0 + interval);
+                      interval = sources[song[i]].buffer.duration - 0.05;
+                      sources[song[i]].start(t0, 0, interval);
+                      sources[song[i]].stop(t0 + interval);
                       t0 += interval;
                   }
               }, false);
    
           }, false);
-         
       };
    
       if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {
@@ -152,6 +173,7 @@
 
 <body>
 <button type="button">a</button>
+<div id="box"></div>
 </body>
 
 </html>
