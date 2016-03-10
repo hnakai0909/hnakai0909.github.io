@@ -6,10 +6,153 @@
 
   <title>あ！スーモ！</title>
 
+  <script>
+  (function() {
+      // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
+      var onDOMContentLoaded = function() {
+   
+          window.AudioContext = window.AudioContext || window.webkitAudioContext;
+   
+          try {
+              // Create the instance of AudioContext
+              var context = new AudioContext();
+          } catch (error) {
+              window.alert(error.message + ' : Please use Chrome or Safari.');
+              return;
+          }
+   
+          // for legacy browsers
+          context.createGain = context.createGain || context.createGainNode;
+   
+          // Create the instance of GainNode
+          var gain = context.createGain();
+   
+          var suumo = [
+            "あ❗️スーモ❗️🌚",
+            "ダン💥", "ダン💥", "ダン💥", "シャーン🎶",
+            "スモ🌝", "スモ🌚", "スモ🌝", "スモ🌚",
+            "スモ🌝", "スモ🌚", "ス〜〜〜モ⤴🌝",
+            "スモ🌚", "スモ🌝", "スモ🌚", "スモ🌝",
+            "スモ🌚", "スモ🌝", "ス〜〜〜モ⤵🌞"
+          ];
+   
+          // for the instances of AudioBuffer
+          var buffers = new Array(suumo.length);
+   
+          // for the instances of AudioBufferSourceNode
+          var sources = new Array(suumo.length);
+   
+          var interval = 0.5;  // sec
+   
+          // Create original event
+          var event = document.createEvent('Event');
+          event.initEvent('complete', true, true);
+   
+          // Get ArrayBuffer by Ajax
+          var load = function(url, index) {
+              var xhr = new XMLHttpRequest();
+   
+              // Timeout (1 minutes)
+              xhr.timeout = 60000;
+   
+              xhr.ontimeout = function() {
+                  window.alert('Timeout.');
+              };
+   
+              xhr.onerror = function() {
+                  window.alert('Ajax Error.');
+              };
+   
+              xhr.onload = function() {
+                  if (xhr.status === 200) {
+                      var arrayBuffer = xhr.response;  // Get ArrayBuffer
+   
+                      if (arrayBuffer instanceof ArrayBuffer) {
+                          // The 2nd argument for decodeAudioData
+                          var successCallback = function(audioBuffer) {
+                              // Get the instance of AudioBuffer
+                              buffers[index] = audioBuffer;
+   
+                              // The loading instances of AudioBuffer has completed ?
+                              for (var i = 0, len = buffers.length; i < len; i++) {
+                                  if (buffers[i] === undefined) {
+                                      return;
+                                  }
+                              }
+   
+                              // dispatch 'complete' event
+                              document.querySelector('button').dispatchEvent(event);
+                          };
+   
+                          // The 3rd argument for decodeAudioData
+                          var errorCallback = function(error) {
+                              if (error instanceof Error) {
+                                  window.alert(error.message);
+                              } else {
+                                  window.alert('Error : "decodeAudioData" method.');
+                              }
+                          };
+   
+                          // Create the instance of AudioBuffer (Asynchronously)
+                          context.decodeAudioData(arrayBuffer, successCallback, errorCallback);
+                      }
+                  }
+              };
+   
+              xhr.open('GET', url, true);
+              xhr.responseType = 'arraybuffer';
+              xhr.send(null);
+          };
+   
+          for (var i = 0, len = suumo.length; i < len; i++) {
+              load('./audio/suumo_' + i + ".mp3", i);
+          }
+   
+          document.querySelector('button').addEventListener('complete', function() {
+             
+              this.addEventListener(EventWrapper.CLICK, function() {
+                  // Get base time
+                  var t0 = context.currentTime;
+   
+                  for (var i = 0, len = buffers.length; i < len; i++) {
+                      // Create the instance of AudioBufferSourceNode
+                      sources[i] = context.createBufferSource();
+   
+                      // for legacy browsers
+                      sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
+                      sources[i].stop  = sources[i].stop  || sources[i].noteOff;
+   
+                      // Set the instance of AudioBuffer
+                      sources[i].buffer = buffers[i];
+   
+                      // Set playBackRate
+                      sources[i].playbackRate.value = document.getElementById('range-playback-rate').valueAsNumber;
+   
+                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+                      sources[i].connect(gain);
+                      gain.connect(context.destination);
+   
+                      sources[i].start((t0 + (interval * i)), 0, (sources[i].buffer.duration / sources[i].playbackRate.value));
+                      sources[i].stop(t0 + (interval * i) + (sources[i].buffer.duration / sources[i].playbackRate.value));
+                  }
+              }, false);
+   
+          }, false);
+         
+      };
+   
+      if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {
+          onDOMContentLoaded();
+      } else {
+          document.addEventListener('DOMContentLoaded', onDOMContentLoaded, true);
+      }
+   
+  })();
+  </script>
 </head>
 
 <body>
-  <audio src="audio/suumo_00.mp3" controls>あ！スーモ！</audio>
+<button type="button">a</button>
 </body>
 
 </html>
