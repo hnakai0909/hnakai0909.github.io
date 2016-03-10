@@ -60,6 +60,7 @@
         "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
       ];
       var song = new Array(suumo.length); 
+      var song_p = 0;
 
       // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
       // http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/audio
@@ -140,7 +141,7 @@
             // Get base time
             var t0 = context.currentTime;
 
-            var text = "";
+            song_p = 0;
 
             //https://bost.ocks.org/mike/shuffle/
             var m = suumo.length,
@@ -167,7 +168,8 @@
               document.getElementById("box").appendChild(sumomi);
               document.getElementById("b"+i).innerHTML = ""+suumo[song[i]];
             }
-                        
+            document.getElementById('b0').style.background = 'rgba(255,0,0,0.5)';
+      
             for (var i = 0, len = buffers.length; i < len; i++) {                     // Create the instance of AudioBufferSourceNode
                                   
               sources[i] = context.createBufferSource();                      // for legacy browsers
@@ -186,13 +188,14 @@
               sources[i].start(t0, 0, interval);                    
               sources[i].stop(t0 + interval);
               t0 += interval;
-              sources[i].onended = function(i){
-                document.getElementById('b'+i).style.background = 'rgba(255,255,255,1.0)';
-                if(i < suumo.length){
-                  document.getElementById('b'+(i+1)).style.background = 'rgba(255,0,0,0.5)';
+              sources[i].onended = function(){
+                document.getElementById('b'+song_p).style.background = 'rgba(255,255,255,1.0)';
+                if(song_p < suumo.length){
+                  document.getElementById('b'+(song_p+1)).style.background = 'rgba(255,0,0,0.5)';
                 }
+                song_p++;
               }            
-            }      
+            }   
           }, false);
         } 
       };     
