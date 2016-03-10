@@ -53,11 +53,11 @@
             song[m] = song[i];
             song[i] = t;
           }
+          m = suumo.length;
           for (i = 0; i < m; i++) {
-            text += suumo[n];
+            text += suumo[i];
           }
-
-          document.getElementById("box").innerHTML = "" + text;   
+ 
           // for the instances of AudioBuffer
           var buffers = new Array(suumo.length);
    
@@ -138,27 +138,28 @@
    
                   for (var i = 0, len = buffers.length; i < len; i++) {
                       // Create the instance of AudioBufferSourceNode
-                      sources[song[i]] = context.createBufferSource();
+                      sources[i] = context.createBufferSource();
    
                       // for legacy browsers
-                      sources[song[i]].start = sources[song[i]].start || sources[song[i]].noteGrainOn;  // noteGrainOn
-                      sources[song[i]].stop  = sources[song[i]].stop  || sources[song[i]].noteOff;
+                      sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
+                      sources[i].stop  = sources[i].stop  || sources[i].noteOff;
    
                       // Set the instance of AudioBuffer
-                      sources[song[i]].buffer = buffers[song[i]];
+                      sources[i].buffer = buffers[song[i]];
    
                       // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
-                      sources[song[i]].connect(gain);
+                      sources[i].connect(gain);
                       gain.connect(context.destination);
 
-                      interval = sources[song[i]].buffer.duration - 0.05;
-                      sources[song[i]].start(t0, 0, interval);
-                      sources[song[i]].stop(t0 + interval);
+                      interval = sources[i].buffer.duration - 0.03; //フライング
+                      sources[i].start(t0, 0, interval);
+                      sources[i].stop(t0 + interval);
                       t0 += interval;
                   }
               }, false);
    
           }, false);
+          document.getElementById("box").innerHTML = "" + text;
       };
    
       if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {
@@ -172,8 +173,8 @@
 </head>
 
 <body>
-<button type="button">a</button>
-<div id="box"></div>
+  <button type="button" style="width:400px;height:80px;font-size:60px;">あ！スーモ！</button>
+  <div id="box"></div>
 </body>
 
 </html>
