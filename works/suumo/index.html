@@ -6,39 +6,46 @@
 
   <title>あ！スーモ！</title>
   <style>
-    i{
-      text-indent:1em;
-      background-repeat:no-repeat;
-      background-position:left center;
+    i {
+      text-indent: 1em;
+      background-repeat: no-repeat;
+      background-position: left center;
       background-size: contain;
       display: inline-block;
       width: 1em;
       height: 1.1em;
     }
-    .e1{
-      background-image : url("./img/1.png");
+
+    .e1 {
+      background-image: url("./img/1.png");
     }
-    .e2{
-      background-image : url("./img/2.png");
+
+    .e2 {
+      background-image: url("./img/2.png");
     }
-    .e3{
-      background-image : url("./img/3.png");
+
+    .e3 {
+      background-image: url("./img/3.png");
     }
-    .e4{
-      background-image : url("./img/4.png");
+
+    .e4 {
+      background-image: url("./img/4.png");
     }
-    .e5{
-      background-image : url("./img/5.png");
+
+    .e5 {
+      background-image: url("./img/5.png");
     }
-    .e6{
-      background-image : url("./img/6.png");
+
+    .e6 {
+      background-image: url("./img/6.png");
     }
-    .e7{
-      background-image : url("./img/7.png");
+
+    .e7 {
+      background-image: url("./img/7.png");
     }
   </style>
   <script>
-  (function() {
+    (function() {
       var suumo = [
         "あ❗️スーモ❗️<i class='e1'></i>",
         "ダン<i class='e2'></i>", "ダン<i class='e2'></i>",
@@ -52,162 +59,136 @@
         "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
         "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
       ];
-      var song = new Array(suumo.length);
-      // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
-      var onDOMContentLoaded = function() {
-   
-          window.AudioContext = window.AudioContext || window.webkitAudioContext;
-   
-          try {
-              // Create the instance of AudioContext
-              var context = new AudioContext();
-          } catch (error) {
-              window.alert(error.message + ' : Please use Chrome or Safari.');
-              return;
-          }
-   
-          // for legacy browsers
-          context.createGain = context.createGain || context.createGainNode;
-   
-          // Create the instance of GainNode
-          var gain = context.createGain();
- 
-          // for the instances of AudioBuffer
-          var buffers = new Array(suumo.length);
-   
-          // for the instances of AudioBufferSourceNode
-          var sources = new Array(suumo.length);
-   
-          var interval;  // sec
-   
-          // Create original event
-          var event = document.createEvent('Event');
-          event.initEvent('complete', true, true);
-   
-          // Get ArrayBuffer by Ajax
-          var load = function(url, index) {
-              var xhr = new XMLHttpRequest();
-   
-              // Timeout (1 minutes)
-              xhr.timeout = 30000;
-   
-              xhr.ontimeout = function() {
-                  window.alert('Timeout.');
-              };
-   
-              xhr.onerror = function() {
-                  //window.alert('Ajax Error.');
-              };
-   
-              xhr.onload = function() {
-                  if (xhr.status === 200) {
-                      var arrayBuffer = xhr.response;  // Get ArrayBuffer
-   
-                      if (arrayBuffer instanceof ArrayBuffer) {
-                          // The 2nd argument for decodeAudioData
-                          var successCallback = function(audioBuffer) {
-                              // Get the instance of AudioBuffer
-                              buffers[index] = audioBuffer;
-   
-                              // The loading instances of AudioBuffer has completed ?
-                              for (var i = 0, len = buffers.length; i < len; i++) {
-                                  if (buffers[i] === undefined) {
-                                      return;
-                                  }
-                              }
-   
-                              // dispatch 'complete' event
-                              document.querySelector('button').dispatchEvent(event);
-                          };
-   
-                          // The 3rd argument for decodeAudioData
-                          var errorCallback = function(error) {
-                              if (error instanceof Error) {
-                                  window.alert(error.message);
-                              } else {
-                                  window.alert('Error : "decodeAudioData" method.');
-                              }
-                          };
-   
-                          // Create the instance of AudioBuffer (Asynchronously)
-                          context.decodeAudioData(arrayBuffer, successCallback, errorCallback);
-                      }
-                  }
-              };
-   
-              xhr.open('GET', url, true);
-              xhr.responseType = 'arraybuffer';
-              xhr.send(null);
-          };
-   
-          for (var i = 0, len = suumo.length; i < len; i++) {
-              load('./audio/suumo_' + i + ".mp3", i);
-          }
-   
-          document.querySelector('button').addEventListener('complete', function() {
-             
-              this.addEventListener('click', function() {
-                  console.log(this);
-                  // Get base time
-                  var t0 = context.currentTime;
+      var song = new Array(suumo.length);  // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
+          
+      var onDOMContentLoaded = function() {         
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;         
+        try {             // Create the instance of AudioContext
+                      
+          var context = new AudioContext();        
+        } catch (error) {            
+          window.alert(error.message + ' : Please use Chrome or Safari.');            
+          return;        
+        }          // for legacy browsers
+                
+        context.createGain = context.createGain || context.createGainNode;          // Create the instance of GainNode
+                
+        var gain = context.createGain();          // for the instances of AudioBuffer
+                
+        var buffers = new Array(suumo.length);          // for the instances of AudioBufferSourceNode
+                
+        var sources = new Array(suumo.length);         
+        var interval;  // sec
+                  // Create original event
+                
+        var event = document.createEvent('Event');        
+        event.initEvent('complete', true, true);          // Get ArrayBuffer by Ajax
+                
+        var load = function(url, index) {            
+          var xhr = new XMLHttpRequest();              // Timeout (1 minutes)
+                      
+          xhr.timeout = 30000;             
+          xhr.ontimeout = function() {                
+            window.alert('Timeout.');            
+          };             
+          xhr.onerror = function() {                 //window.alert('Ajax Error.');
+                        };             
+          xhr.onload = function() {                
+            if (xhr.status === 200) {                    
+              var arrayBuffer = xhr.response;  // Get ArrayBuffer
+                                   
+              if (arrayBuffer instanceof ArrayBuffer) {                         // The 2nd argument for decodeAudioData
+                                        
+                var successCallback = function(audioBuffer) {                             // Get the instance of AudioBuffer
+                                              
+                  buffers[index] = audioBuffer;                              // The loading instances of AudioBuffer has completed ?
+                                              
+                  for (var i = 0, len = buffers.length; i < len; i++) {                                
+                    if (buffers[i] === undefined) {                                    
+                      return;                                
+                    }                            
+                  }                              // dispatch 'complete' event
+                                              
+                  document.querySelector('button').dispatchEvent(event);                        
+                };                          // The 3rd argument for decodeAudioData
+                                        
+                var errorCallback = function(error) {                            
+                  if (error instanceof Error) {                                
+                    window.alert(error.message);                            
+                  } else {                                
+                    window.alert('Error : "decodeAudioData" method.');                            
+                  }                        
+                };                          // Create the instance of AudioBuffer (Asynchronously)
+                                        
+                context.decodeAudioData(arrayBuffer, successCallback, errorCallback);                    
+              }                
+            }            
+          };             
+          xhr.open('GET', url, true);            
+          xhr.responseType = 'arraybuffer';            
+          xhr.send(null);        
+        };         
+        for (var i = 0, len = suumo.length; i < len; i++) {            
+          load('./audio/suumo_' + i + ".mp3", i);        
+        } 
+        document.querySelector('button').addEventListener('click', function() {
+          // Get base time
+          var t0 = context.currentTime;
 
-                  var text = "";
+          var text = "";
 
-                  //https://bost.ocks.org/mike/shuffle/
-                  var m = suumo.length, t, i;
-                  for (i = 0; i < m; i++) {
-                    song[i] = i;
-                  }
-                  if(this.id=="random"){
-                    // While there remain elements to shuffle…
-                    while (m) {
-                      // Pick a remaining element…
-                      i = Math.floor(Math.random() * m--);
+          //https://bost.ocks.org/mike/shuffle/
+          var m = suumo.length,
+            t, i;
+          for (i = 0; i < m; i++) {
+            song[i] = i;
+          }
+          if (this.id == "random") {
+            // While there remain elements to shuffle…
+            while (m) {
+              // Pick a remaining element…
+              i = Math.floor(Math.random() * m--);
 
-                      // And swap it with the current element.
-                      t = song[m];
-                      song[m] = song[i];
-                      song[i] = t;
-                    }
-                  }
-                  m = suumo.length;
-                  for (i = 0; i < m; i++) {
-                    text += suumo[song[i]];
-                  }
-                  document.getElementById("box").innerHTML = "" + text;
+              // And swap it with the current element.
+              t = song[m];
+              song[m] = song[i];
+              song[i] = t;
+            }
+          }
+          m = suumo.length;
+          for (i = 0; i < m; i++) {
+            text += suumo[song[i]];
+          }
+          document.getElementById("box").innerHTML = "" + text;
 
-                  for (var i = 0, len = buffers.length; i < len; i++) {
-                      // Create the instance of AudioBufferSourceNode
-                      sources[i] = context.createBufferSource();
-   
-                      // for legacy browsers
-                      sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
-                      sources[i].stop  = sources[i].stop  || sources[i].noteOff;
-   
-                      // Set the instance of AudioBuffer
-                      sources[i].buffer = buffers[song[i]];
-   
-                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
-                      sources[i].connect(gain);
-                      gain.connect(context.destination);
+                      
+          for (var i = 0, len = buffers.length; i < len; i++) {                     // Create the instance of AudioBufferSourceNode
+                                
+            sources[i] = context.createBufferSource();                      // for legacy browsers
+                                
+            sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
+                                
+            sources[i].stop  = sources[i].stop  || sources[i].noteOff;                      // Set the instance of AudioBuffer
+                                
+            sources[i].buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+                                
+            sources[i].connect(gain);                    
+            gain.connect(context.destination);
 
-                      interval = sources[i].buffer.duration - 0.03; //フライング
-                      sources[i].start(t0, 0, interval);
-                      sources[i].stop(t0 + interval);
-                      t0 += interval;
-                  }
-              }, false);
-   
-          }, false);
-      };
-   
-      if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {
-          onDOMContentLoaded();
-      } else {
-          document.addEventListener('DOMContentLoaded', onDOMContentLoaded, true);
-      }
-   
-  })();
+            interval = sources[i].buffer.duration - 0.03; //フライング
+                                
+            sources[i].start(t0, 0, interval);                    
+            sources[i].stop(t0 + interval);
+            t0 += interval;                
+          }         
+        }, false);    
+      };     
+      if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {        
+        onDOMContentLoaded();    
+      } else {        
+        document.addEventListener('DOMContentLoaded', onDOMContentLoaded, true);    
+      } 
+    })();
   </script>
 </head>
 
