@@ -186,8 +186,11 @@
               sources[i].start(t0, 0, interval);                    
               sources[i].stop(t0 + interval);
               t0 += interval;
-              sources[i].onended = function(){
-                alert(this);
+              sources[i].onended = function(i){
+                document.getElementById('b'+i).style.background = 'rgba(255,255,255,1.0)';
+                if(i < suumo.length){
+                  document.getElementById('b'+(i+1)).style.background = 'rgba(255,0,0,0.5)';
+                }
               }            
             }      
           }, false);
