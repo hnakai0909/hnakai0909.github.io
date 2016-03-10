@@ -44,6 +44,22 @@
       background-image: url("./img/7.png");
     }
   </style>
+  <script>window.twttr = (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0],
+      t = window.twttr || {};
+    if (d.getElementById(id)) return t;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://platform.twitter.com/widgets.js";
+    fjs.parentNode.insertBefore(js, fjs);
+   
+    t._e = [];
+    t.ready = function(f) {
+      t._e.push(f);
+    };
+   
+    return t;
+  }(document, "script", "twitter-wjs"));</script>
   <script>
     (function() {
       var suumo = [
@@ -53,11 +69,19 @@
         "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
         "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
         "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
-        "ス〜〜〜モ<i class='e5'></i>",
+        "ス〜〜〜モ<i class='e5'></i><i class='e4'></i>",
         "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
         "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
         "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
         "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
+      ];
+      var suumo2 = [
+        "あ❗️ スーモ❗️🌚",
+        "ダン💥","ダン💥","ダン💥","シャーン🎶",
+        "スモ🌝","スモ🌚","スモ🌝","スモ🌚",
+        "スモ🌝","スモ🌚","ス〜〜〜モ⤴🌝",
+        "スモ🌚","スモ🌝","スモ🌚","スモ🌝",
+        "スモ🌚","スモ🌝","ス〜〜〜モ⤵🌞"
       ];
       var song = new Array(suumo.length); 
       var song_p = 0;
@@ -141,6 +165,7 @@
             // Get base time
             var t0 = context.currentTime;
 
+            var text = "";
             song_p = 0;
 
             //https://bost.ocks.org/mike/shuffle/
@@ -167,6 +192,7 @@
               sumomi.setAttribute("id", "b"+i);
               document.getElementById("box").appendChild(sumomi);
               document.getElementById("b"+i).innerHTML = ""+suumo[song[i]];
+              text += suumo2[song[i]];
             }
             document.getElementById('b0').style.background = 'rgba(255,0,0,0.5)';
       
@@ -189,11 +215,11 @@
               sources[i].stop(t0 + interval);
               t0 += interval;
               sources[i].onended = function(){
-                document.getElementById('b'+i).style.background = 'rgba(255,255,255,1.0)';
-                if(i < suumo.length){
-                  document.getElementById('b'+(i+1)).style.background = 'rgba(255,0,0,0.5)';
+                document.getElementById('b'+song_p).style.background = 'rgba(255,255,255,1.0)';
+                if(song_p < suumo.length){
+                  document.getElementById('b'+(song_p+1)).style.background = 'rgba(255,0,0,0.5)';
                 }
-                //song_p++;
+                song_p++;
               }            
             }   
           }, false);
@@ -213,6 +239,8 @@
   <button type="button" id="random" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ランダム)</button>
   <div id="box" style="font-size:2em;"></div>
   <div id="sorry" style="color:#888">正直著作権etc的にいろいろアウトです。</div>
+  <a class="twitter-share-button" href="https://twitter.com/share" data-url="http://hnakai0909.github.io/works/suumo/" data-size="large">
+Tweet</a>
 </body>
 
 </html>
