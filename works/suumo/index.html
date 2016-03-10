@@ -129,7 +129,7 @@
                       sources[i].connect(gain);
                       gain.connect(context.destination);
 
-                      interval = sources[i].buffer.duration;
+                      interval = sources[i].buffer.duration - 0.05;
                       sources[i].start(t0, 0, interval);
                       sources[i].stop(t0 + interval);
                       t0 += interval;
