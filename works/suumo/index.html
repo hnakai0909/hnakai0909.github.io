@@ -125,9 +125,6 @@
                       // Set the instance of AudioBuffer
                       sources[i].buffer = buffers[i];
    
-                      // Set playBackRate
-                      sources[i].playbackRate.value = document.getElementById('range-playback-rate').valueAsNumber;
-   
                       // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
                       sources[i].connect(gain);
                       gain.connect(context.destination);
