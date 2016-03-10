@@ -59,7 +59,10 @@
         "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
         "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
       ];
-      var song = new Array(suumo.length);  // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
+      var song = new Array(suumo.length); 
+
+      // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
+      // http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/audio
           
       var onDOMContentLoaded = function() {         
         window.AudioContext = window.AudioContext || window.webkitAudioContext;         
@@ -159,11 +162,12 @@
             }
             m = suumo.length;
             for (i = 0; i < m; i++) {
-              text += suumo[song[i]];
+              var sumomi = document.createElement("span");
+              sumomi.setAttribute("id", "b"+i);
+              document.getElementById("box").appendChild(sumomi);
+              document.getElementById("b"+i).innerHTML = ""+suumo[song[i]];
             }
-            document.getElementById("box").innerHTML = "" + text;
-
-                        
+                    /*    
             for (var i = 0, len = buffers.length; i < len; i++) {                     // Create the instance of AudioBufferSourceNode
                                   
               sources[i] = context.createBufferSource();                      // for legacy browsers
@@ -181,8 +185,11 @@
                                   
               sources[i].start(t0, 0, interval);                    
               sources[i].stop(t0 + interval);
-              t0 += interval;                
-            }         
+              t0 += interval;
+              sources[i].onended = function(){
+                alert(this);
+              }            
+            }      */
           }, false);
         } 
       };     
