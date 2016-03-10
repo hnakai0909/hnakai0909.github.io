@@ -189,11 +189,11 @@
               sources[i].stop(t0 + interval);
               t0 += interval;
               sources[i].onended = function(){
-                document.getElementById('b'+song_p).style.background = 'rgba(255,255,255,1.0)';
-                if(song_p < suumo.length){
-                  document.getElementById('b'+(song_p+1)).style.background = 'rgba(255,0,0,0.5)';
+                document.getElementById('b'+i).style.background = 'rgba(255,255,255,1.0)';
+                if(i < suumo.length){
+                  document.getElementById('b'+(i+1)).style.background = 'rgba(255,0,0,0.5)';
                 }
-                song_p++;
+                //song_p++;
               }            
             }   
           }, false);
