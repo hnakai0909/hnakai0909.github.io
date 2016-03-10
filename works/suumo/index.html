@@ -39,6 +39,20 @@
   </style>
   <script>
   (function() {
+      var suumo = [
+        "あ❗️スーモ❗️<i class='e1'></i>",
+        "ダン<i class='e2'></i>", "ダン<i class='e2'></i>",
+        "ダン<i class='e2'></i>", "シャーン<i class='e3'></i>",
+        "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+        "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+        "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+        "ス〜〜〜モ<i class='e5'></i>",
+        "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+        "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+        "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+        "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
+      ];
+      var song = new Array(suumo.length);
       // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
       var onDOMContentLoaded = function() {
    
@@ -57,43 +71,6 @@
    
           // Create the instance of GainNode
           var gain = context.createGain();
-   
-          var suumo = [
-            "あ❗️スーモ❗️<i class='e1'></i>",
-            "ダン<i class='e2'></i>", "ダン<i class='e2'></i>",
-            "ダン<i class='e2'></i>", "シャーン<i class='e3'></i>",
-            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
-            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
-            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
-            "ス〜〜〜モ<i class='e5'></i>",
-            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
-            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
-            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
-            "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
-          ];
-          var song = new Array(suumo.length);
-          var text = "";
-
-          //https://bost.ocks.org/mike/shuffle/
-          var m = suumo.length, t, i;
-          for (i = 0; i < m; i++) {
-            song[i] = i;
-          }
-          // While there remain elements to shuffle…
-          while (m) {
-            // Pick a remaining element…
-            i = Math.floor(Math.random() * m--);
-
-            // And swap it with the current element.
-            t = song[m];
-            song[m] = song[i];
-            song[i] = t;
-          }
-          m = suumo.length;
-          for (i = 0; i < m; i++) {
-            text += suumo[song[i]];
-          }
-          document.getElementById("box").innerHTML = "" + text;
  
           // for the instances of AudioBuffer
           var buffers = new Array(suumo.length);
@@ -167,12 +144,73 @@
               load('./audio/suumo_' + i + ".mp3", i);
           }
    
-          document.querySelector('button').addEventListener('complete', function() {
+          document.getElementById('normal').addEventListener('complete', function() {
              
               this.addEventListener('click', function() {
                   // Get base time
                   var t0 = context.currentTime;
+
+                  var text = "";
+
+                  var m = suumo.length, i;
+                  for (i = 0; i < m; i++) {
+                    text += suumo[i];
+                  }
+                  document.getElementById("box").innerHTML = "" + text;
    
+                  for (var i = 0, len = buffers.length; i < len; i++) {
+                      // Create the instance of AudioBufferSourceNode
+                      sources[i] = context.createBufferSource();
+   
+                      // for legacy browsers
+                      sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
+                      sources[i].stop  = sources[i].stop  || sources[i].noteOff;
+   
+                      // Set the instance of AudioBuffer
+                      sources[i].buffer = buffers[i];
+   
+                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+                      sources[i].connect(gain);
+                      gain.connect(context.destination);
+
+                      interval = sources[i].buffer.duration - 0.03; //フライング
+                      sources[i].start(t0, 0, interval);
+                      sources[i].stop(t0 + interval);
+                      t0 += interval;
+                  }
+              }, false);
+   
+          }, false);
+          document.querySelector('button').addEventListener('complete', function() {
+             
+              this.addEventListener('click', function() {
+                  console.log(this);
+                  // Get base time
+                  var t0 = context.currentTime;
+
+                  var text = "";
+
+                  //https://bost.ocks.org/mike/shuffle/
+                  var m = suumo.length, t, i;
+                  for (i = 0; i < m; i++) {
+                    song[i] = i;
+                  }
+                  // While there remain elements to shuffle…
+                  while (m) {
+                    // Pick a remaining element…
+                    i = Math.floor(Math.random() * m--);
+
+                    // And swap it with the current element.
+                    t = song[m];
+                    song[m] = song[i];
+                    song[i] = t;
+                  }
+                  m = suumo.length;
+                  for (i = 0; i < m; i++) {
+                    text += suumo[song[i]];
+                  }
+                  document.getElementById("box").innerHTML = "" + text;
+
                   for (var i = 0, len = buffers.length; i < len; i++) {
                       // Create the instance of AudioBufferSourceNode
                       sources[i] = context.createBufferSource();
@@ -209,7 +247,8 @@
 </head>
 
 <body>
-  <button type="button" style="width:500px;height:80px;font-size:60px;">あ！スーモ！</button>
+  <button type="button" id="normal" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ふつう)</button>
+  <button type="button" id="random" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ランダム)</button>
   <div id="box" style="font-size:2em;"></div>
   <div id="sorry" style="color:#888">正直著作権etc的にいろいろアウトです。</div>
 </body>
