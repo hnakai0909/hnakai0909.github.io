@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>suumoジェネレータ</title>
+<script><!--
+suumo=[
+  "あ❗️スーモ❗️🌚",
+  "ダン💥",
+  "ダン💥",
+  "ダン💥",
+  "シャーン🎶",
+  "スモ🌝",
+  "スモ🌚",
+  "スモ🌝",
+  "スモ🌚",
+  "スモ🌝",
+  "スモ🌚",
+  "ス〜〜〜モ⤴🌝",
+  "スモ🌚",
+  "スモ🌝",
+  "スモ🌚",
+  "スモ🌝",
+  "スモ🌚",
+  "スモ🌝",
+  "ス〜〜〜モ⤵🌞"
+];
+function gen(){
+var text="";
+for(i=0;i<19;i++){
+r=Math.random();
+ text+=suumo[Math.floor(Math.random()*(suumo.length))];
+}
+document.getElementById("box").innerHTML=""+text;
+}
+--></script>
+<body>
+<button onclick="gen()"><h1>生成</h1></button>
+<div id="box"></div>
+</body>
+</html>
