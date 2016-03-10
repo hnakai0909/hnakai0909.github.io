@@ -5,7 +5,38 @@
   <meta charset="utf-8">
 
   <title>あ！スーモ！</title>
-
+  <style>
+    i{
+      text-indent:1em;
+      background-repeat:no-repeat;
+      background-position:left center;
+      background-size: contain;
+      display: inline-block;
+      width: 1em;
+      height: 1.1em;
+    }
+    .e1{
+      background-image : url("./img/1.png");
+    }
+    .e2{
+      background-image : url("./img/2.png");
+    }
+    .e3{
+      background-image : url("./img/3.png");
+    }
+    .e4{
+      background-image : url("./img/4.png");
+    }
+    .e5{
+      background-image : url("./img/5.png");
+    }
+    .e6{
+      background-image : url("./img/6.png");
+    }
+    .e7{
+      background-image : url("./img/7.png");
+    }
+  </style>
   <script>
   (function() {
       // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
@@ -28,12 +59,17 @@
           var gain = context.createGain();
    
           var suumo = [
-            "あ❗️スーモ❗️🌚",
-            "ダン💥", "ダン💥", "ダン💥", "シャーン🎶",
-            "スモ🌝", "スモ🌚", "スモ🌝", "スモ🌚",
-            "スモ🌝", "スモ🌚", "ス〜〜〜モ⤴🌝",
-            "スモ🌚", "スモ🌝", "スモ🌚", "スモ🌝",
-            "スモ🌚", "スモ🌝", "ス〜〜〜モ⤵🌞"
+            "あ❗️スーモ❗️<i class='e1'></i>",
+            "ダン<i class='e2'></i>", "ダン<i class='e2'></i>",
+            "ダン<i class='e2'></i>", "シャーン<i class='e3'></i>",
+            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+            "ス〜〜〜モ<i class='e5'></i>",
+            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+            "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
+            "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
           ];
           var song = new Array(suumo.length);
           var text = "";
@@ -55,8 +91,9 @@
           }
           m = suumo.length;
           for (i = 0; i < m; i++) {
-            text += suumo[i];
+            text += suumo[song[i]];
           }
+          document.getElementById("box").innerHTML = "" + text;
  
           // for the instances of AudioBuffer
           var buffers = new Array(suumo.length);
@@ -75,14 +112,14 @@
               var xhr = new XMLHttpRequest();
    
               // Timeout (1 minutes)
-              xhr.timeout = 60000;
+              xhr.timeout = 30000;
    
               xhr.ontimeout = function() {
                   window.alert('Timeout.');
               };
    
               xhr.onerror = function() {
-                  window.alert('Ajax Error.');
+                  //window.alert('Ajax Error.');
               };
    
               xhr.onload = function() {
@@ -159,7 +196,6 @@
               }, false);
    
           }, false);
-          document.getElementById("box").innerHTML = "" + text;
       };
    
       if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {
@@ -173,8 +209,9 @@
 </head>
 
 <body>
-  <button type="button" style="width:400px;height:80px;font-size:60px;">あ！スーモ！</button>
-  <div id="box"></div>
+  <button type="button" style="width:500px;height:80px;font-size:60px;">あ！スーモ！</button>
+  <div id="box" style="font-size:2em;"></div>
+  <div id="sorry" style="color:#888">正直著作権etc的にいろいろアウトです。</div>
 </body>
 
 </html>
