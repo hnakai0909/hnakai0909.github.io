@@ -144,43 +144,6 @@
               load('./audio/suumo_' + i + ".mp3", i);
           }
    
-          document.getElementById('normal').addEventListener('complete', function() {
-             
-              this.addEventListener('click', function() {
-                  // Get base time
-                  var t0 = context.currentTime;
-
-                  var text = "";
-
-                  var m = suumo.length, i;
-                  for (i = 0; i < m; i++) {
-                    text += suumo[i];
-                  }
-                  document.getElementById("box").innerHTML = "" + text;
-   
-                  for (var i = 0, len = buffers.length; i < len; i++) {
-                      // Create the instance of AudioBufferSourceNode
-                      sources[i] = context.createBufferSource();
-   
-                      // for legacy browsers
-                      sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
-                      sources[i].stop  = sources[i].stop  || sources[i].noteOff;
-   
-                      // Set the instance of AudioBuffer
-                      sources[i].buffer = buffers[i];
-   
-                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
-                      sources[i].connect(gain);
-                      gain.connect(context.destination);
-
-                      interval = sources[i].buffer.duration - 0.03; //フライング
-                      sources[i].start(t0, 0, interval);
-                      sources[i].stop(t0 + interval);
-                      t0 += interval;
-                  }
-              }, false);
-   
-          }, false);
           document.querySelector('button').addEventListener('complete', function() {
              
               this.addEventListener('click', function() {
@@ -195,15 +158,17 @@
                   for (i = 0; i < m; i++) {
                     song[i] = i;
                   }
-                  // While there remain elements to shuffle…
-                  while (m) {
-                    // Pick a remaining element…
-                    i = Math.floor(Math.random() * m--);
+                  if(this.id=="random"){
+                    // While there remain elements to shuffle…
+                    while (m) {
+                      // Pick a remaining element…
+                      i = Math.floor(Math.random() * m--);
 
-                    // And swap it with the current element.
-                    t = song[m];
-                    song[m] = song[i];
-                    song[i] = t;
+                      // And swap it with the current element.
+                      t = song[m];
+                      song[m] = song[i];
+                      song[i] = t;
+                    }
                   }
                   m = suumo.length;
                   for (i = 0; i < m; i++) {
