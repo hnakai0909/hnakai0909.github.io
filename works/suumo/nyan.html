@@ -1,40 +1,31 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<title>suumoジェネレータ</title>
-<script><!--
-suumo=[
-  "あ❗️スーモ❗️🌚",
-  "ダン💥",
-  "ダン💥",
-  "ダン💥",
-  "シャーン🎶",
-  "スモ🌝",
-  "スモ🌚",
-  "スモ🌝",
-  "スモ🌚",
-  "スモ🌝",
-  "スモ🌚",
-  "ス〜〜〜モ⤴🌝",
-  "スモ🌚",
-  "スモ🌝",
-  "スモ🌚",
-  "スモ🌝",
-  "スモ🌚",
-  "スモ🌝",
-  "ス〜〜〜モ⤵🌞"
-];
-function gen(){
-var text="";
-for(i=0;i<19;i++){
-r=Math.random();
- text+=suumo[Math.floor(Math.random()*(suumo.length))];
-}
-document.getElementById("box").innerHTML=""+text;
-}
---></script>
+  <meta charset="utf-8">
+  <title>suumoジェネレータ</title>
+  <script><!--
+    suumo=[
+      "あ❗️スーモ❗️🌚",
+      "ダン💥", "ダン💥", "ダン💥", "シャーン🎶",
+      "スモ🌝", "スモ🌚", "スモ🌝", "スモ🌚",
+      "スモ🌝", "スモ🌚", "ス〜〜〜モ⤴🌝",
+      "スモ🌚", "スモ🌝", "スモ🌚", "スモ🌝",
+      "スモ🌚", "スモ🌝", "ス〜〜〜モ⤵🌞"
+    ];
+    var audioObj = new Audio("./audio/suumo_"+"00"+".mp3");
+    function gen(){
+      var text="";
+      for(i=0;i<19;i++){
+        r=Math.random();
+        text+=suumo[Math.floor(Math.random()*(suumo.length))];
+      }
+      document.getElementById("box").innerHTML=""+text;
+    }-->
+    </script>
+  </head>
 <body>
-<button onclick="gen()"><h1>生成</h1></button>
-<div id="box"></div>
+  <button onclick="gen()"><h1>生成</h1></button>
+  <div id="box"></div>
+  <input type="button" id="play" value="再生" onclick="audioObj.play();" />
 </body>
 </html>
