@@ -42,7 +42,7 @@
           // for the instances of AudioBufferSourceNode
           var sources = new Array(suumo.length);
    
-          var interval = 0.5;  // sec
+          //var interval = 0.5;  // sec
    
           // Create original event
           var event = document.createEvent('Event');
@@ -128,9 +128,11 @@
                       // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
                       sources[i].connect(gain);
                       gain.connect(context.destination);
-   
-                      sources[i].start((t0 + (interval * i)), 0, (sources[i].buffer.duration / sources[i].playbackRate.value));
-                      sources[i].stop(t0 + (interval * i) + (sources[i].buffer.duration / sources[i].playbackRate.value));
+
+                      interval = sources[i].buffer.duration;
+                      sources[i].start(t0, 0, interval);
+                      sources[i].stop(t0 + interval);
+                      t0 += interval;
                   }
               }, false);
    
