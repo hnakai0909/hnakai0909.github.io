@@ -131,57 +131,60 @@
         for (var i = 0, len = suumo.length; i < len; i++) {            
           load('./audio/suumo_' + i + ".mp3", i);        
         } 
-        document.querySelector('button').addEventListener('click', function() {
-          // Get base time
-          var t0 = context.currentTime;
+        var buttons = document.querySelectorAll('button');
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].addEventListener('click', function() {
+            // Get base time
+            var t0 = context.currentTime;
 
-          var text = "";
+            var text = "";
 
-          //https://bost.ocks.org/mike/shuffle/
-          var m = suumo.length,
-            t, i;
-          for (i = 0; i < m; i++) {
-            song[i] = i;
-          }
-          if (this.id == "random") {
-            // While there remain elements to shuffle…
-            while (m) {
-              // Pick a remaining element…
-              i = Math.floor(Math.random() * m--);
-
-              // And swap it with the current element.
-              t = song[m];
-              song[m] = song[i];
-              song[i] = t;
+            //https://bost.ocks.org/mike/shuffle/
+            var m = suumo.length,
+              t, i;
+            for (i = 0; i < m; i++) {
+              song[i] = i;
             }
-          }
-          m = suumo.length;
-          for (i = 0; i < m; i++) {
-            text += suumo[song[i]];
-          }
-          document.getElementById("box").innerHTML = "" + text;
+            if (this.id == "random") {
+              // While there remain elements to shuffle…
+              while (m) {
+                // Pick a remaining element…
+                i = Math.floor(Math.random() * m--);
 
-                      
-          for (var i = 0, len = buffers.length; i < len; i++) {                     // Create the instance of AudioBufferSourceNode
-                                
-            sources[i] = context.createBufferSource();                      // for legacy browsers
-                                
-            sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
-                                
-            sources[i].stop  = sources[i].stop  || sources[i].noteOff;                      // Set the instance of AudioBuffer
-                                
-            sources[i].buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
-                                
-            sources[i].connect(gain);                    
-            gain.connect(context.destination);
+                // And swap it with the current element.
+                t = song[m];
+                song[m] = song[i];
+                song[i] = t;
+              }
+            }
+            m = suumo.length;
+            for (i = 0; i < m; i++) {
+              text += suumo[song[i]];
+            }
+            document.getElementById("box").innerHTML = "" + text;
 
-            interval = sources[i].buffer.duration - 0.03; //フライング
-                                
-            sources[i].start(t0, 0, interval);                    
-            sources[i].stop(t0 + interval);
-            t0 += interval;                
-          }         
-        }, false);    
+                        
+            for (var i = 0, len = buffers.length; i < len; i++) {                     // Create the instance of AudioBufferSourceNode
+                                  
+              sources[i] = context.createBufferSource();                      // for legacy browsers
+                                  
+              sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
+                                  
+              sources[i].stop  = sources[i].stop  || sources[i].noteOff;                      // Set the instance of AudioBuffer
+                                  
+              sources[i].buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+                                  
+              sources[i].connect(gain);                    
+              gain.connect(context.destination);
+
+              interval = sources[i].buffer.duration - 0.03; //フライング
+                                  
+              sources[i].start(t0, 0, interval);                    
+              sources[i].stop(t0 + interval);
+              t0 += interval;                
+            }         
+          }, false);
+        } 
       };     
       if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {        
         onDOMContentLoaded();    
