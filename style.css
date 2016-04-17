@@ -57,17 +57,14 @@ body {
 #twitter {
   border: 4px solid rgba(0, 170, 240, 1);
   background: rgba(0, 170, 240, 0.3) url(./img/twitter.png) no-repeat 40px bottom;
-  ;
 }
 #github {
   border: 4px solid rgba(200, 200, 200, 1);
   background: rgba(200, 200, 200, 0.3) url(./img/github.png) no-repeat 40px bottom;
-  ;
 }
 #email {
   border: 4px solid rgba(255, 0, 50, 1);
   background: rgba(255, 0, 50, 0.3) url(./img/email.png) no-repeat 40px bottom;
-  ;
 }
 #hateblo {
   border: 4px solid rgba(71, 168, 156, 1);
@@ -92,4 +89,5 @@ body {
 #spec {
   border: 4px solid rgba(0, 0, 0, 1);
   background: rgba(255, 255, 255, 0.3);
+  margin:16px;
 }
