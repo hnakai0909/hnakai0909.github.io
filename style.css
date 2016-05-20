@@ -11,8 +11,6 @@ body {
   text-align: center;
   border-collapse: collapse;
   border: 0px;
-  /*height: 384px;
-  width: 384px;*/
 }
 #badge table{
   margin:auto;
@@ -24,19 +22,19 @@ body {
   /* font-family: sans-serif; */
 }
 #myname1 {
-  font-size: 64px;
-  height: 96px;
-  background: rgb(180,255,255);
+  font-size: 60px;
+  height: 90px;
+  background: rgb(213,229,255);
 }
 #myname2 {
   font-size: 40px;
-  height: 96px;
-  background: rgb(205,255,255);
+  height: 90px;
+  background: rgb(227,237,255);
 }
 #myname3 {
   font-size: 32px;
-  height: 96px;
-  background: rgb(230,255,255);
+  height: 90px;
+  background: rgb(241,245,255);
 }
 #linklist {
   clear: both;
