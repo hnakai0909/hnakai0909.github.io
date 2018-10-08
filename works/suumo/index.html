@@ -218,7 +218,7 @@
               sources[i].start(t0, 0, interval);                    
               sources[i].stop(t0 + interval);
               t0 += interval;
-              sources[i].onended = function(){
+              sources[i].onended = (function(i){
                 console.log('onended i='+i+' song_p:'+song_p);
                 if(song_p == i){
                   document.getElementById('b'+song_p).style.background = 'rgba(255,255,255,1.0)';
@@ -227,7 +227,7 @@
                   }
                   song_p++;
                 }
-              }
+              })(i);
             }   
           }, false);
         } 
