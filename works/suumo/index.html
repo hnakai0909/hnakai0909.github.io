@@ -183,22 +183,26 @@
             // Get base time
             var t0 = context.currentTime;
             
-            lyrics = "";
-            
             init_order(song, this.id);
-
-            suumo.forEach(function(value,i){
+            
+            lyrics = "";
+            var element = document.getElementById("box"); //歌詞表示リセット
+            while (element.firstChild) {
+              element.removeChild(element.firstChild);
+            }
+            
+            suumo.forEach(function(value,i){ //歌詞表示
               var sumomi = document.createElement("span");
               document.getElementById("box").appendChild(sumomi);
               sumomi.innerHTML = ""+suumo[song[i]];
               lyric_elements[i] = sumomi;
               lyrics += lyric_pieces[song[i]];
             });
-            document.getElementById('b0').style.background = 'rgba(255,0,0,0.5)';
+            lyric_elements[0].style.background = 'rgba(255,0,0,0.5)';
             
             suumo.forEach(function(value,i){
                                   
-              source = context.createBufferSource();                      // for legacy browsers
+              source = context.createBufferSource();
                                   
               source.start = source.start || source.noteGrainOn;  // noteGrainOn
  
@@ -215,9 +219,9 @@
               t0 += interval;
               source.onended = (function(i){
                 return function(){
-                  document.getElementById('b'+i).style.background = 'rgba(255,255,255,1.0)';
+                  lyric_elements[i].style.background = 'rgba(255,255,255,1.0)';
                   if(i < suumo.length-1){
-                    document.getElementById('b'+(i+1)).style.background = 'rgba(255,0,0,0.5)';
+                    lyric_elements[i+1].style.background = 'rgba(255,0,0,0.5)';
                   }
                 }
               })(i);
