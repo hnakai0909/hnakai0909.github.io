@@ -164,7 +164,12 @@
         document.querySelectorAll('button').forEach(function(button){
           button.addEventListener('click', function() {
             if (this.id == "tweet2") {
-              window.open('http://twitter.com/?status='+encodeURIComponent("あ❗️スーモ❗️ - 「"+text+"」 - http://hnakai0909.github.io/works/suumo/"));
+              window.open('http://twitter.com/?status='+encodeURIComponent("あ！スーモ！ - 「"+text+"」 - http://hnakai0909.github.io/works/suumo/"));
+              return;
+            } else if (this.id == 'stop'){
+              sources.forEach(function(source){
+                source.stop(0);
+              });
               return;
             }
             
@@ -187,25 +192,25 @@
             });
             document.getElementById('b0').style.background = 'rgba(255,0,0,0.5)';
       
-            for (var i = 0, len = buffers.length; i < len; i++) {                     // Create the instance of AudioBufferSourceNode
+            sources.forEach(function(source,i){
                                   
-              sources[i] = context.createBufferSource();                      // for legacy browsers
+              source = context.createBufferSource();                      // for legacy browsers
                                   
-              sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
+              source.start = source.start || source.noteGrainOn;  // noteGrainOn
  
-              sources[i].stop  = sources[i].stop  || sources[i].noteOff;                      // Set the instance of AudioBuffer
+              source.stop  = source.stop  || source.noteOff;                      // Set the instance of AudioBuffer
                                   
-              sources[i].buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+              source.buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
                                   
-              sources[i].connect(gain);                    
+              source.connect(gain);                    
               gain.connect(context.destination);
 
-              interval = sources[i].buffer.duration - 0.03; //フライング
+              interval = source.buffer.duration - 0.03; //フライング
                                   
-              sources[i].start(t0, 0, interval);
-              sources[i].stop(t0 + interval);
+              source.start(t0, 0, interval);
+              //source.stop(t0 + interval);
               t0 += interval;
-              sources[i].onended = (function(i){
+              source.onended = (function(i){
                 console.log('onended i='+i+' song_p:'+song_p);
                 if(song_p == i){
                   document.getElementById('b'+song_p).style.background = 'rgba(255,255,255,1.0)';
@@ -215,7 +220,7 @@
                   song_p++;
                 }
               })(i);
-            }   
+            });
           }, false);
         }); 
       };     
@@ -232,8 +237,8 @@
   <div id="caution">ボタンを押すと音が出ます。音量にご注意ください。</div>
   <button type="button" id="normal" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ふつう)</button>
   <button type="button" id="random" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ランダム)</button>
+  <button type="button" id="stop" style="width:60px;height:60px;font-size:40px;">止</button>
   <div id="box" style="font-size:2em;"></div>
-  <div id="sorry" style="color:#888">正直著作権etc的にいろいろアウトです。</div>
   <a class="twitter-share-button" href="https://twitter.com/share" data-url="http://hnakai0909.github.io/works/suumo/" data-size="large">
 Tweet</a>
   <button type="button" id="tweet2" style="width:200px;height:40px;">ツイート(スーモ文字列を含める)</button>
