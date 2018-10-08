@@ -218,12 +218,14 @@
               sources[i].start(t0, 0, interval);                    
               sources[i].stop(t0 + interval);
               t0 += interval;
-              sources[i].onended = function(){
-                document.getElementById('b'+song_p).style.background = 'rgba(255,255,255,1.0)';
-                if(song_p < suumo.length-1){
-                  document.getElementById('b'+(song_p+1)).style.background = 'rgba(255,0,0,0.5)';
+              sources[i].onended = function(i){
+                if(song_p == i){
+                  document.getElementById('b'+song_p).style.background = 'rgba(255,255,255,1.0)';
+                  if(song_p < suumo.length-1){
+                    document.getElementById('b'+(song_p+1)).style.background = 'rgba(255,0,0,0.5)';
+                  }
+                  song_p++;
                 }
-                song_p++;
               }
             }   
           }, false);
