@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
 
 <head>
@@ -11,8 +11,33 @@
   <!-- Bootstrap core CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
 
-  <link href="./style.css" rel="stylesheet">
-
+  <link href="css/style.css" rel="stylesheet">
+  <script>
+    document.addEventListener("DOMContentLoaded", function(){
+      function pad(number) {
+        if (number < 10) {
+          return '0' + number;
+        }
+        return number;
+      }
+      Date.prototype.toMyString = function(){
+        return this.getFullYear() +
+          '.' + pad(this.getMonth() + 1) +
+          '.' + pad(this.getDate());
+      };
+      var birthday = new Date(1996, 9-1, 9);
+      var now = new Date();
+      var age = now.getFullYear() - birthday.getFullYear();
+      if( (now.getMonth() < birthday.getMonth()) || 
+          ( (now.getMonth() == birthday.getMonth()) && (now.getDate() < now.getDate()) ) 
+      ){
+        age = age - 1;
+      };
+      document.getElementById('birthday').innerHTML = birthday.toMyString();
+      document.getElementById('age').innerHTML = age;
+    });
+  </script>
+  
 </head>
 
 <body>
@@ -64,16 +89,16 @@
           </tr>
           <tr>
             <td>
-              <img src="./img/icon0.png" alt="icon" \>
+              <img src="./img/icon0.png" alt="icon" />
             </td>
             <td>
-              <img src="./img/icon1.png" alt="icon" \>
+              <img src="./img/icon1.png" alt="icon" />
             </td>
             <td>
-              <img src="./img/icon2.png" alt="icon" \>
+              <img src="./img/icon2.png" alt="icon" />
             </td>
             <td>
-              <img src="./img/icon3.png" alt="icon" \>
+              <img src="./img/icon3.png" alt="icon" />
             </td>
           </tr>
         </tbody>
@@ -101,10 +126,8 @@
     <div class="row">
       <div class="col col-md-6">
         <div id="email" class="col-inner">
-          e-mail : hnakai0909
-          <img alt="[at]" src="./img/atmark.png" style="margin:4px;">yahoo
-          <img alt="[dot]" src="./img/dot.png">co
-          <img alt="[dot]" src="./img/dot.png">jp
+          e-mail : 
+hnakai0909<img alt="[at]" src="./img/atmark.png">yahoo<img alt="[dot]" src="./img/dot.png">co<img alt="[dot]" src="./img/dot.png">jp
         </div>
       </div>
       <div class="col col-md-6">
@@ -156,9 +179,9 @@
           <ul>
             <li><h3>birth / age / grade:</h3></li>
             <ul>
-              <li>1996.09.09 / 21歳 / 大学3年次4年生</li>
+              <li><span id='birthday'></span> / <span id='age'></span>歳 / 大学3年次4年生</li>
             </ul>
-            <li><h3>Interest:</h3></li>
+            <li><h3>Interests:</h3></li>
             <ul>
               <li><h4>プログラミング</h4></li>
               <ul>
@@ -171,7 +194,7 @@
                 <li>etc...</li>
               </ul>
               <li>電子工作</li>
-              <li>鉄道</li>
+              <li>鉄道(旅行)</li>
               <li>音楽(MIDI打ち込み)</li>
             </ul>
           <li><h3>Member of:</h3></li>
@@ -187,6 +210,10 @@
               <li>某電気・物理系部活OB</li>
               <li>2013文化祭HP担当</li>
             </ul>
+            <li>アルバイト</li>
+            <ul>
+              <li>某電子部品小売店(hint:アイコン左下)</li>
+            </ul>
             <li>Minecraft</li>
             <ul>
                <li><a href="http://www.akaishi-teacher.net/">赤石塾</a></li>
@@ -194,8 +221,9 @@
                <li>しと鯖</li>
             </ul>
           </ul>
-          <li><h3>Qualification:</h3></li>
+          <li><h3>Qualifications:</h3></li>
           <ul>
+            <li>TOEIC L&R Test 830点 (2018年6月)</li>
             <li>エンベデッドシステムスペシャリスト[ES] (2018年4月)</li>
             <li>応用情報技術者[AP] (2017年4月)</li>
             <li>普通自動車運転免許 (MT/AT) (2016年12月)</li>

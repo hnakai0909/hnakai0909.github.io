@@ -1,5 +1,5 @@
 body {
-  background: rgba(250, 250, 240, 1);
+  background: rgba(230, 250, 230, 1);
 }
 /*body a {
   color: #00E;
@@ -85,7 +85,7 @@ body {
   background: rgba(252, 155, 24, 0.3) url(./img/amazon.png) no-repeat 40px bottom;
 }
 #spec {
-  border: 4px solid rgba(0, 0, 0, 1);
-  background: rgba(255, 255, 255, 0.3);
-  margin:16px;
+  border: 8px solid rgba(113, 128, 97, 1);
+  border-radius: 16px;
+  background: rgba(187, 229, 165, 0.3);
 }
