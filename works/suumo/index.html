@@ -76,7 +76,7 @@
         "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
         "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
       ];
-      var suumo2 = [
+      var lyric_pieces = [
         "あ❗️ スーモ❗️🌚",
         "ダン💥","ダン💥","ダン💥","シャーン🎶",
         "スモ🌝","スモ🌚","スモ🌝","スモ🌚",
@@ -85,7 +85,7 @@
         "スモ🌚","スモ🌝","ス〜〜〜モ⤵🌞"
       ];
       var song = new Array(suumo.length); 
-      var text = "";
+      var lyrics = "";
 
       // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
       // http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/audio
@@ -105,18 +105,18 @@
         var gain = context.createGain();          // for the instances of AudioBuffer
                 
         var buffers = new Array(suumo.length);          // for the instances of AudioBufferSourceNode
+        var lyric_elements = new Array(suumo.length);
                 
-        var sources = new Array(suumo.length);         
+        var sources = [];
         var interval;  // sec
-                  // Create original event
                 
-        var event = document.createEvent('Event');        
+        var event = document.createEvent('Event');        // Create original event
         event.initEvent('complete', true, true);          // Get ArrayBuffer by Ajax
                 
         var load = function(url, index) {            
-          var xhr = new XMLHttpRequest();              // Timeout (1 minutes)
+          var xhr = new XMLHttpRequest();
                       
-          xhr.timeout = 30000;             
+          xhr.timeout = 30000;                        // Timeout (30sec)
           xhr.ontimeout = function() {                
             window.alert('Timeout.');            
           };             
@@ -164,11 +164,16 @@
         document.querySelectorAll('button').forEach(function(button){
           button.addEventListener('click', function() {
             if (this.id == "tweet2") {
-              window.open('http://twitter.com/?status='+encodeURIComponent("あ！スーモ！ - 「"+text+"」 - http://hnakai0909.github.io/works/suumo/"));
+              window.open('http://twitter.com/?status='+encodeURIComponent("あ！スーモ！ - 「"+lyrics+"」 - http://hnakai0909.github.io/works/suumo/"));
               return;
             } else if (this.id == 'stop'){
+              //音の再生を止める
               sources.forEach(function(source){
                 source.stop(0);
+              });
+              //赤反転を消す
+              suumo.forEach(function(val,i){
+                lyric_elements[i].style.background = 'rgba(255,255,255,1.0)';
               });
               return;
             }
@@ -178,51 +183,45 @@
             // Get base time
             var t0 = context.currentTime;
             
-            text = "";
-            song_p = 0;
+            lyrics = "";
             
             init_order(song, this.id);
 
             suumo.forEach(function(value,i){
               var sumomi = document.createElement("span");
-              sumomi.setAttribute("id", "b"+i);
               document.getElementById("box").appendChild(sumomi);
-              document.getElementById("b"+i).innerHTML = ""+suumo[song[i]];
-              text += suumo2[song[i]];
+              sumomi.innerHTML = ""+suumo[song[i]];
+              lyric_elements[i] = sumomi;
+              lyrics += lyric_pieces[song[i]];
             });
             document.getElementById('b0').style.background = 'rgba(255,0,0,0.5)';
             
-            //本当はsourcesでforEachしたいが未代入時は実行されない
-            buffers.forEach(function(buffer,i){
+            suumo.forEach(function(value,i){
                                   
-              sources[i] = context.createBufferSource();                      // for legacy browsers
+              source = context.createBufferSource();                      // for legacy browsers
                                   
-              sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
+              source.start = source.start || source.noteGrainOn;  // noteGrainOn
  
-              sources[i].stop  = sources[i].stop  || sources[i].noteOff;                      // Set the instance of AudioBuffer
+              source.stop  = source.stop  || source.noteOff;                      // Set the instance of AudioBuffer
                                   
-              sources[i].buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+              source.buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
                                   
-              sources[i].connect(gain);                    
+              source.connect(gain);                    
               gain.connect(context.destination);
 
-              interval = sources[i].buffer.duration - 0.03; //フライング
+              interval = source.buffer.duration - 0.05; //フライング
                                   
-              sources[i].start(t0, 0, interval);
-              //sources[i].stop(t0 + interval);
+              source.start(t0, 0, interval);
               t0 += interval;
-              sources[i].onended = (function(i){
+              source.onended = (function(i){
                 return function(){
-                  console.log('onended i='+i+' song_p:'+song_p);
-                  if(song_p == i){
-                    document.getElementById('b'+song_p).style.background = 'rgba(255,255,255,1.0)';
-                    if(song_p < suumo.length-1){
-                      document.getElementById('b'+(song_p+1)).style.background = 'rgba(255,0,0,0.5)';
-                    }
-                    song_p++;
+                  document.getElementById('b'+i).style.background = 'rgba(255,255,255,1.0)';
+                  if(i < suumo.length-1){
+                    document.getElementById('b'+(i+1)).style.background = 'rgba(255,0,0,0.5)';
                   }
                 }
               })(i);
+              sources.push(source);
             });
           }, false);
         }); 
