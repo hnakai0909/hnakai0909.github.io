@@ -191,26 +191,27 @@
               text += suumo2[song[i]];
             });
             document.getElementById('b0').style.background = 'rgba(255,0,0,0.5)';
-      
-            sources.forEach(function(source,i){
+            
+            //本当はsourcesでforEachしたいが未代入時は実行されない
+            buffers.forEach(function(buffer,i){
                                   
-              source = context.createBufferSource();                      // for legacy browsers
+              sources[i] = context.createBufferSource();                      // for legacy browsers
                                   
-              source.start = source.start || source.noteGrainOn;  // noteGrainOn
+              sources[i].start = sources[i].start || sources[i].noteGrainOn;  // noteGrainOn
  
-              source.stop  = source.stop  || source.noteOff;                      // Set the instance of AudioBuffer
+              sources[i].stop  = sources[i].stop  || sources[i].noteOff;                      // Set the instance of AudioBuffer
                                   
-              source.buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+              sources[i].buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
                                   
-              source.connect(gain);                    
+              sources[i].connect(gain);                    
               gain.connect(context.destination);
 
-              interval = source.buffer.duration - 0.03; //フライング
+              interval = sources[i].buffer.duration - 0.03; //フライング
                                   
-              source.start(t0, 0, interval);
-              //source.stop(t0 + interval);
+              sources[i].start(t0, 0, interval);
+              //sources[i].stop(t0 + interval);
               t0 += interval;
-              source.onended = (function(i){
+              sources[i].onended = (function(i){
                 console.log('onended i='+i+' song_p:'+song_p);
                 if(song_p == i){
                   document.getElementById('b'+song_p).style.background = 'rgba(255,255,255,1.0)';
