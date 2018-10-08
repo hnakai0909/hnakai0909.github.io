@@ -169,6 +169,7 @@
             } else if (this.id == 'stop'){
               //音の再生を止める
               sources.forEach(function(source){
+                source.onended = function(){};
                 source.stop(0);
               });
               //赤反転を消す
