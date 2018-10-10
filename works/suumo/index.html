@@ -172,6 +172,7 @@
                 source.onended = function(){};
                 source.stop(0);
               });
+              sources = [];
               //赤反転を消す
               suumo.forEach(function(val,i){
                 lyric_elements[i].style.background = 'rgba(255,255,255,1.0)';
@@ -221,8 +222,10 @@
               source.onended = (function(i){
                 return function(){
                   lyric_elements[i].style.background = 'rgba(255,255,255,1.0)';
-                  if(i < suumo.length-1){
+                  if(i < suumo.length - 1){
                     lyric_elements[i+1].style.background = 'rgba(255,0,0,0.5)';
+                  }else{
+                    sources = [];
                   }
                 }
               })(i);
@@ -244,7 +247,7 @@
   <div id="caution">ボタンを押すと音が出ます。音量にご注意ください。</div>
   <button type="button" id="normal" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ふつう)</button>
   <button type="button" id="random" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ランダム)</button>
-  <button type="button" id="stop" style="width:60px;height:60px;font-size:40px;">止</button>
+  <button type="button" id="stop" style="width:60px;height:60px;font-size:30px;">止</button>
   <div id="box" style="font-size:2em;"></div>
   <a class="twitter-share-button" href="https://twitter.com/share" data-url="http://hnakai0909.github.io/works/suumo/" data-size="large">
 Tweet</a>
