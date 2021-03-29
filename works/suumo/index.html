@@ -192,52 +192,76 @@
             // Get base time
             var t0 = context.currentTime;
             
-            init_order(song, this.id);
+            var mode = this.id;
             
             lyrics = "";
+            sources = [];
+            lyric_elements = [];
             var element = document.getElementById("box"); //歌詞表示リセット
             while (element.firstChild) {
               element.removeChild(element.firstChild);
             }
-            
-            suumo.forEach(function(value,i){ //歌詞表示
-              var sumomi = document.createElement("span");
-              document.getElementById("box").appendChild(sumomi);
-              sumomi.innerHTML = ""+suumo[song[i]];
-              lyric_elements[i] = sumomi;
-              lyrics += lyric_pieces[song[i]];
-            });
-            lyric_elements[0].style.background = 'rgba(255,0,0,0.5)';
-            
-            suumo.forEach(function(value,i){
-                                  
-              source = context.createBufferSource();
-                                  
-              source.start = source.start || source.noteGrainOn;  // noteGrainOn
- 
-              source.stop  = source.stop  || source.noteOff;                      // Set the instance of AudioBuffer
-                                  
-              source.buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
-                                  
-              source.connect(gain);                    
-              gain.connect(context.destination);
 
-              interval = source.buffer.duration - 0.05; //フライング
-                                  
-              source.start(t0, 0, interval);
-              t0 += interval;
-              source.onended = (function(i){
-                return function(){
-                  lyric_elements[i].style.background = 'transparent';
-                  if(i < suumo.length - 1){
-                    lyric_elements[i+1].style.background = 'rgba(255,0,0,0.5)';
-                  }else{
-                    sources = [];
-                  }
+            addSuumo(t0, false);
+            lyric_elements[0].style.background = 'rgba(255,0,0,0.5)';
+            
+            function addSuumo(startTime, withAppearanceAnimation) {
+              init_order(song, mode === "normal" ? "normal" : "random");
+
+              var startIndex = sources.length;
+              suumo.forEach(function(value, i){ //歌詞表示
+                var sumomi = document.createElement("span");
+                document.getElementById("box").appendChild(sumomi);
+                sumomi.innerHTML = ""+suumo[song[i]];
+                lyric_elements[startIndex + i] = sumomi;
+                lyrics += lyric_pieces[song[i]];
+
+                if (withAppearanceAnimation) {
+                  sumomi.style.transition = "opacity 0.3s linear";
+                  sumomi.style.opacity = "0";
+                  setTimeout(function () {
+                    sumomi.style.opacity = "1";
+                  }, 0);
                 }
-              })(i);
-              sources.push(source);
-            });
+              });
+
+              var t0 = startTime;
+
+              suumo.forEach(function(value,i){
+                                    
+                source = context.createBufferSource();
+                                    
+                source.start = source.start || source.noteGrainOn;  // noteGrainOn
+  
+                source.stop  = source.stop  || source.noteOff;                      // Set the instance of AudioBuffer
+                                    
+                source.buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+                                    
+                source.connect(gain);                    
+                gain.connect(context.destination);
+
+                interval = source.buffer.duration - 0.05; //フライング
+                                    
+                source.start(t0, 0, interval);
+                t0 += interval;
+                source.onended = (function(i){
+                  return function(){
+                    lyric_elements[i].style.background = 'transparent';
+
+                    if (mode === "infinity" && i === sources.length - 4) {
+                      addSuumo(t0, true)
+                    }
+
+                    if(i < sources.length - 1){
+                      lyric_elements[i + 1].style.background = 'rgba(255,0,0,0.5)';
+                    }else{
+                      sources = [];
+                    }
+                  }
+                })(startIndex + i);
+                sources.push(source);
+              });
+            }
           }, false);
         }); 
       };     
@@ -254,6 +278,7 @@
   <div id="caution">ボタンを押すと音が出ます。音量にご注意ください。</div>
   <button type="button" id="normal" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ふつう)</button>
   <button type="button" id="random" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ランダム)</button>
+  <button type="button" id="infinity" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(無限)</button>
   <button type="button" id="stop" style="width:60px;height:60px;font-size:30px;text-align:center;">止</button>
   <div id="box" style="font-size:2em;background:rgba(255,255,255,0.4);margin:16px;padding:16px;border-radius:8px;"></div>
   <a class="twitter-share-button" href="https://twitter.com/share" data-url="http://hnakai0909.github.io/works/suumo/" data-size="large">
