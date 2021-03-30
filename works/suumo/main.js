@@ -122,10 +122,8 @@ function init_order(array, option) {
         if (this.id == "tweet2") {
           if (lyrics == "") {
             window.alert("スーモ文字列が空のままです．再生してからツイートすることをおすすめします");
-          } else if (lyrics.length > 356){
-              lyrics = lyrics.substring(0, 357)
           }
-          window.open('http://twitter.com/intent/tweet/?text=' + encodeURIComponent(lyrics) + '&url=' + encodeURIComponent("http://hnakai0909.github.io/works/suumo/"));
+          window.open('http://twitter.com/intent/tweet/?text=' + encodeURIComponent(lyrics.substring(0, 600)) + '&url=' + encodeURIComponent("http://hnakai0909.github.io/works/suumo/"));
           return;
         } else if (this.id == 'stop') {
           //音の再生を止める
