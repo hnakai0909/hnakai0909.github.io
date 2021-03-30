@@ -73,6 +73,7 @@ function init_order(array, option) {
     var buffers = new Array(suumo.length);          // for the instances of AudioBufferSourceNode
     var lyric_elements = new Array(suumo.length);
 
+    var livingSources = [];
     var sources = [];
     var interval;  // sec
 
@@ -147,10 +148,11 @@ function init_order(array, option) {
           return;
         } else if (this.id == 'stop') {
           //音の再生を止める
-          sources.forEach(function (source) {
+          livingSources.forEach(function (source) {
             source.onended = function () { };
             source.stop(0);
           });
+          livingSources = [];
           sources = [];
           //赤反転を消す
           lyric_elements.forEach(function (element) {
@@ -225,6 +227,7 @@ function init_order(array, option) {
             source.onended = (function (i) {
               return function () {
                 lyric_elements[i].style.background = lyricBGStyleNormal;
+                livingSources.splice(livingSources.indexOf(this), 1);
 
                 if (mode === "infinity" && i === sources.length - 4) {
                   addSuumo(t0, true)
@@ -237,6 +240,7 @@ function init_order(array, option) {
                 }
               }
             })(startIndex + i);
+            livingSources.push(source);
             sources.push(source);
           });
         }
