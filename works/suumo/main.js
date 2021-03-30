@@ -1,4 +1,4 @@
-function init_order(array, option) {
+function initOrder(array, option) {
   //https://bost.ocks.org/mike/shuffle/
   var m = array.length, t, i;
   for (i = 0; i < m; i++) {
@@ -35,7 +35,7 @@ function init_order(array, option) {
     "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
     "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
   ];
-  const lyric_pieces = [
+  const lyricPieces = [
     "あ❗️ スーモ❗️🌚",
     "ダン💥", "ダン💥", "ダン💥", "シャーン🎶",
     "スモ🌝", "スモ🌚", "スモ🌝", "スモ🌚",
@@ -56,7 +56,7 @@ function init_order(array, option) {
     const rateSlider = document.getElementById('rate_slider');
     const rateRandomCheckbox = document.getElementById('rate_random_checkbox');
     function updateRateSliderValue(){
-      rate = Math.pow(2,parseFloat(rateSlider.value));
+      rate = Math.pow(2 ,parseFloat(rateSlider.value));
       document.getElementById('rate_slider_value').innerText = "x" + rate.toFixed(2);
     }
     function updateRateRandomCheckbox(){
@@ -76,10 +76,13 @@ function init_order(array, option) {
     var gain = context.createGain();          // for the instances of AudioBuffer
 
     var buffers = new Array(suumo.length);          // for the instances of AudioBufferSourceNode
-    var lyric_elements = new Array(suumo.length);
+    var lyricElements = new Array(suumo.length);
 
     var livingSources = [];                           // will playing sources
     var sources = [];
+
+    var lastMode = "";
+
     var interval;  // sec
 
     var event = document.createEvent('Event');        // Create original event
@@ -133,14 +136,14 @@ function init_order(array, option) {
       load('./audio/suumo_' + i + ".mp3", i);
     });
 
-    volumeSlider.addEventListener('input', function(){
+    volumeSlider.addEventListener('input', function () {
       //音量スライダーを動かしたとき
     });
-    
-    rateSlider.addEventListener('input', function(){
+
+    rateSlider.addEventListener('input', function () {
       //再生速度スライダーを動かしたとき
       updateRateSliderValue();
-      
+
     });
 
     rateRandomCheckbox.addEventListener('input', function(){
@@ -166,7 +169,7 @@ function init_order(array, option) {
           livingSources = [];
           sources = [];
           //赤反転を消す
-          lyric_elements.forEach(function (element) {
+          lyricElements.forEach(function (element) {
             element.style.background = lyricBGStyleNormal;
           });
           return;
@@ -181,41 +184,48 @@ function init_order(array, option) {
 
         // Get base time
         var t0 = context.currentTime;
-
         var mode = this.id;
+        var createSumomi = true;
 
         lyrics = "";
         sources = [];
-        lyric_elements = [];
-        var element = document.getElementById("box"); //歌詞表示リセット
-        while (element.firstChild) {
-          element.removeChild(element.firstChild);
+        if (mode === "normal" && lastMode === "normal") {
+          createSumomi = false;
+        } else {
+          lyricElements = [];
+          var element = document.getElementById("box"); //歌詞表示リセット
+          while (element.firstChild) {
+            element.removeChild(element.firstChild);
+          }
         }
+        lastMode = mode;
 
         gain.gain.value = volumeSlider.value;
 
-        addSuumo(t0, false);
-        lyric_elements[0].style.background = lyricBgStyleCurrent;
+        addSuumo(t0, false, createSumomi);
+        lyricElements[0].style.background = lyricBgStyleCurrent;
 
-        function addSuumo(startTime, withAppearanceAnimation) {
-          init_order(song, mode === "normal" ? "normal" : "random");
+        function addSuumo(startTime, withAppearanceAnimation, createSumomi) {
+          initOrder(song, mode === "normal" ? "normal" : "random");
 
           var startIndex = sources.length;
-          suumo.forEach(function (value, i) { //歌詞表示
-            var sumomi = document.createElement("span");
-            document.getElementById("box").appendChild(sumomi);
-            sumomi.innerHTML = "" + suumo[song[i]];
-            lyric_elements[startIndex + i] = sumomi;
-            lyrics += lyric_pieces[song[i]];
+          if (createSumomi) {
+            suumo.forEach(function (value, i) { //歌詞表示
+              var sumomi = document.createElement("span");
+              document.getElementById("box").appendChild(sumomi);
+              sumomi.innerHTML = "" + suumo[song[i]];
+              lyricElements[startIndex + i] = sumomi;
+              lyrics += lyricPieces[song[i]];
 
-            if (withAppearanceAnimation) {
-              sumomi.style.transition = "opacity 0.3s linear";
-              sumomi.style.opacity = "0";
-              setTimeout(function () {
-                sumomi.style.opacity = "1";
-              }, 0);
-            }
-          });
+              if (withAppearanceAnimation) {
+                sumomi.style.transition = "opacity 0.3s linear";
+                sumomi.style.opacity = "0";
+                setTimeout(function () {
+                  sumomi.style.opacity = "1";
+                }, 0);
+              }
+            });
+          }
 
           var t0 = startTime;
 
@@ -228,8 +238,8 @@ function init_order(array, option) {
             source.buffer = buffers[song[i]]; // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
             
             if (isRateRandom){
-              const max_rate = Math.pow(2,parseFloat(rateSlider.max));
-              const min_rate = Math.pow(2,parseFloat(rateSlider.min));
+              const max_rate = Math.pow(2 ,parseFloat(rateSlider.max));
+              const min_rate = Math.pow(2 ,parseFloat(rateSlider.min));
               const random_rate = Math.random() * (max_rate - min_rate) + min_rate;
               source.playbackRate.value = random_rate;
               interval = (source.buffer.duration - 0.045) / random_rate;
@@ -248,16 +258,16 @@ function init_order(array, option) {
               return function () {
                 livingSources.splice(livingSources.indexOf(this), 1);
 
-                if (lyric_elements[i]) {
-                  lyric_elements[i].style.background = lyricBGStyleNormal;
+                if (lyricElements[i]) {
+                  lyricElements[i].style.background = lyricBGStyleNormal;
                 }
 
                 if (mode === "infinity" && i === sources.length - 4) {
-                  addSuumo(t0, true)
+                  addSuumo(t0, true, true);
                 }
 
                 if (i < sources.length - 1) {
-                  lyric_elements[i + 1].style.background = lyricBgStyleCurrent;
+                  lyricElements[i + 1].style.background = lyricBgStyleCurrent;
                 }
 
                 if (livingSources.length === 0) {
