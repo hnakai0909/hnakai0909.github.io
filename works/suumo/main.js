@@ -226,8 +226,11 @@ function init_order(array, option) {
             t0 += interval;
             source.onended = (function (i) {
               return function () {
-                lyric_elements[i].style.background = lyricBGStyleNormal;
                 livingSources.splice(livingSources.indexOf(this), 1);
+
+                if (lyric_elements[i]) {
+                  lyric_elements[i].style.background = lyricBGStyleNormal;
+                }
 
                 if (mode === "infinity" && i === sources.length - 4) {
                   addSuumo(t0, true)
