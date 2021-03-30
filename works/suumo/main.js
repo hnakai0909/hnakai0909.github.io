@@ -227,7 +227,7 @@ function init_order(array, option) {
             source.stop = source.stop || source.noteOff; // Set the instance of AudioBuffer
             source.buffer = buffers[song[i]]; // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
             
-            if (isRateRandom === true){
+            if (isRateRandom){
               const max_rate = 4;
               const min_rate = 0.25;
               const random_rate = Math.random() * (max_rate - min_rate) + min_rate;
