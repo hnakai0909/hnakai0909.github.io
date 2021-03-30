@@ -123,7 +123,7 @@ function init_order(array, option) {
     
     document.getElementById('rate_slider').addEventListener('input', function(){
       //再生速度スライダーを動かしたとき
-      document.getElementById('rate_slider_value').innerText = "x" + ((Math.round((Math.pow(2,parseInt(document.getElementById('rate_slider').value)/100))*100))/100).toFixed(2);
+      document.getElementById('rate_slider_value').innerText = "x" + ((Math.pow(2,parseInt(document.getElementById('rate_slider').value)))).toFixed(2);
     });
 
     document.querySelectorAll('button').forEach(function (button) {
