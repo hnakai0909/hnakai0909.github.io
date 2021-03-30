@@ -238,9 +238,9 @@ function initOrder(array, option) {
             source.buffer = buffers[song[i]]; // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
             
             if (isRateRandom){
-              const max_rate = Math.pow(2 ,parseFloat(rateSlider.max));
-              const min_rate = Math.pow(2 ,parseFloat(rateSlider.min));
-              const random_rate = Math.random() * (max_rate - min_rate) + min_rate;
+              const sliderMax = parseFloat(rateSlider.max);
+              const sliderMin = parseFloat(rateSlider.min);
+              const random_rate = pow(2, Math.random() * (sliderMax - sliderMin) + sliderMin);
               source.playbackRate.value = random_rate;
               interval = (source.buffer.duration - 0.045) / random_rate;
             } else {
