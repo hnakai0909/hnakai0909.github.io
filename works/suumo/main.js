@@ -19,7 +19,10 @@ function init_order(array, option) {
 };
 
 (function () {
-  var suumo = [
+  const lyricBGStyleNormal = 'transparent';
+  const lyricBgStyleCurrent = 'rgba(255,0,0,0.5)';
+
+  const suumo = [
     "あ❗️スーモ❗️<i class='e1'></i>",
     "ダン<i class='e2'></i>", "ダン<i class='e2'></i>",
     "ダン<i class='e2'></i>", "シャーン<i class='e3'></i>",
@@ -32,7 +35,7 @@ function init_order(array, option) {
     "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
     "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
   ];
-  var lyric_pieces = [
+  const lyric_pieces = [
     "あ❗️ スーモ❗️🌚",
     "ダン💥", "ダン💥", "ダン💥", "シャーン🎶",
     "スモ🌝", "スモ🌚", "スモ🌝", "スモ🌚",
@@ -47,9 +50,16 @@ function init_order(array, option) {
   // http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/audio
 
   var onDOMContentLoaded = function () {
+    let rate = 0;
+    const volumeSlider = document.getElementById('volume_slider');
+    const rateSlider = document.getElementById('rate_slider');
+    function updateRateSliderValue(){
+      rate = Math.pow(2,parseFloat(rateSlider.value));
+      document.getElementById('rate_slider_value').innerText = "x" + rate.toFixed(2);
+    }
+
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     try {             // Create the instance of AudioContext
-
       var context = new AudioContext();
     } catch (error) {
       window.alert(error.message + ' : Please use Chrome or Safari.');
@@ -117,13 +127,14 @@ function init_order(array, option) {
       load('./audio/suumo_' + i + ".mp3", i);
     });
 
-    document.getElementById('volume_slider').addEventListener('input', function(){
+    volumeSlider.addEventListener('input', function(){
       //音量スライダーを動かしたとき
     });
     
-    document.getElementById('rate_slider').addEventListener('input', function(){
+    rateSlider.addEventListener('input', function(){
       //再生速度スライダーを動かしたとき
-      document.getElementById('rate_slider_value').innerText = "x" + ((Math.pow(2,parseInt(document.getElementById('rate_slider').value)))).toFixed(2);
+      updateRateSliderValue();
+      
     });
 
     document.querySelectorAll('button').forEach(function (button) {
@@ -143,12 +154,12 @@ function init_order(array, option) {
           sources = [];
           //赤反転を消す
           lyric_elements.forEach(function (element) {
-            element.style.background = 'transparent';
+            element.style.background = lyricBGStyleNormal;
           });
           return;
         } else if (this.id == 'rate_reset') {
-          document.getElementById('rate_slider').value = 0;
-          document.getElementById('rate_slider_value').innerText = "x" + Math.pow(2,parseInt(document.getElementById('rate_slider').value)).toFixed(2);
+          rateSlider.value = 0;
+          updateRateSliderValue();
           return;
         }
         //以下，いずれかのあ！スーモ！再生ボタンのとき
@@ -168,11 +179,10 @@ function init_order(array, option) {
           element.removeChild(element.firstChild);
         }
 
-        gain.gain.value = document.getElementById("volume_slider").value;
-        var rate = document.getElementById("rate_slider").value;
+        gain.gain.value = volumeSlider.value;
 
         addSuumo(t0, false);
-        lyric_elements[0].style.background = 'rgba(255,0,0,0.5)';
+        lyric_elements[0].style.background = lyricBgStyleCurrent;
 
         function addSuumo(startTime, withAppearanceAnimation) {
           init_order(song, mode === "normal" ? "normal" : "random");
@@ -203,8 +213,7 @@ function init_order(array, option) {
             source.start = source.start || source.noteGrainOn; // noteGrainOn
             source.stop = source.stop || source.noteOff; // Set the instance of AudioBuffer
             source.buffer = buffers[song[i]]; // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
-            source.playbackrate.value = rate;
-            source.
+            source.playbackRate.value = rate;
 
             source.connect(gain);
             gain.connect(context.destination);
@@ -215,14 +224,14 @@ function init_order(array, option) {
             t0 += interval;
             source.onended = (function (i) {
               return function () {
-                lyric_elements[i].style.background = 'transparent';
+                lyric_elements[i].style.background = lyricBGStyleNormal;
 
                 if (mode === "infinity" && i === sources.length - 4) {
                   addSuumo(t0, true)
                 }
 
                 if (i < sources.length - 1) {
-                  lyric_elements[i + 1].style.background = 'rgba(255,0,0,0.5)';
+                  lyric_elements[i + 1].style.background = lyricBgStyleCurrent;
                 } else {
                   sources = [];
                 }
