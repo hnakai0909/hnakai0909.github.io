@@ -73,7 +73,7 @@ function init_order(array, option) {
     var buffers = new Array(suumo.length);          // for the instances of AudioBufferSourceNode
     var lyric_elements = new Array(suumo.length);
 
-    var livingSources = [];
+    var livingSources = [];                           // will playing sources
     var sources = [];
     var interval;  // sec
 
@@ -235,7 +235,9 @@ function init_order(array, option) {
 
                 if (i < sources.length - 1) {
                   lyric_elements[i + 1].style.background = lyricBgStyleCurrent;
-                } else {
+                }
+
+                if (livingSources.length === 0) {
                   sources = [];
                 }
               }
