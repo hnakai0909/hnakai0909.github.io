@@ -51,11 +51,16 @@ function initOrder(array, option) {
 
   var onDOMContentLoaded = function () {
     let rate = 1; //デフォルト:等倍速
+    let isRateRandom = false; //デフォルト:再生速度ランダムじゃない
     const volumeSlider = document.getElementById('volume_slider');
     const rateSlider = document.getElementById('rate_slider');
-    function updateRateSliderValue() {
-      rate = Math.pow(2, parseFloat(rateSlider.value));
+    const rateRandomCheckbox = document.getElementById('rate_random_checkbox');
+    function updateRateSliderValue(){
+      rate = Math.pow(2 ,parseFloat(rateSlider.value));
       document.getElementById('rate_slider_value').innerText = "x" + rate.toFixed(2);
+    }
+    function updateRateRandomCheckbox(){
+      isRateRandom = rateRandomCheckbox.checked;
     }
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -139,6 +144,12 @@ function initOrder(array, option) {
       //再生速度スライダーを動かしたとき
       updateRateSliderValue();
 
+    });
+
+    rateRandomCheckbox.addEventListener('input', function(){
+      //再生速度ランダムチェックボックスを操作したとき
+      updateRateRandomCheckbox();
+      
     });
 
     document.querySelectorAll('button').forEach(function (button) {
@@ -225,12 +236,21 @@ function initOrder(array, option) {
             source.start = source.start || source.noteGrainOn; // noteGrainOn
             source.stop = source.stop || source.noteOff; // Set the instance of AudioBuffer
             source.buffer = buffers[song[i]]; // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
-            source.playbackRate.value = rate;
+            
+            if (isRateRandom){
+              const max_rate = Math.pow(2 ,parseFloat(rateSlider.max));
+              const min_rate = Math.pow(2 ,parseFloat(rateSlider.min));
+              const random_rate = Math.random() * (max_rate - min_rate) + min_rate;
+              source.playbackRate.value = random_rate;
+              interval = (source.buffer.duration - 0.045) / random_rate;
+            } else {
+              source.playbackRate.value = rate;
+              interval = (source.buffer.duration - 0.045) / rate;
+            }
 
             source.connect(gain);
             gain.connect(context.destination);
 
-            interval = (source.buffer.duration - 0.045) / rate;
 
             source.start(t0);
             t0 += interval;
