@@ -117,6 +117,15 @@ function init_order(array, option) {
       load('./audio/suumo_' + i + ".mp3", i);
     });
 
+    document.getElementById('volume_slider').addEventListener('input', function(){
+      //音量スライダーを動かしたとき
+    });
+    
+    document.getElementById('rate_slider').addEventListener('input', function(){
+      //再生速度スライダーを動かしたとき
+      document.getElementById('rate_slider_value').innerText = "x" + ((Math.round((Math.pow(2,parseInt(document.getElementById('rate_slider').value)/100))*100))/100).toFixed(2);
+    });
+
     document.querySelectorAll('button').forEach(function (button) {
       button.addEventListener('click', function () {
         if (this.id == "tweet2") {
@@ -137,7 +146,12 @@ function init_order(array, option) {
             element.style.background = 'transparent';
           });
           return;
+        } else if (this.id == 'rate_reset') {
+          document.getElementById('rate_slider').value = 0;
+          document.getElementById('rate_slider_value').innerText = "x" + Math.pow(2,parseInt(document.getElementById('rate_slider').value)).toFixed(2);
+          return;
         }
+        //以下，いずれかのあ！スーモ！再生ボタンのとき
 
         context.resume();
 
@@ -153,6 +167,9 @@ function init_order(array, option) {
         while (element.firstChild) {
           element.removeChild(element.firstChild);
         }
+
+        gain.gain.value = document.getElementById("volume_slider").value;
+        var rate = document.getElementById("rate_slider").value;
 
         addSuumo(t0, false);
         lyric_elements[0].style.background = 'rgba(255,0,0,0.5)';
@@ -183,18 +200,18 @@ function init_order(array, option) {
 
             source = context.createBufferSource();
 
-            source.start = source.start || source.noteGrainOn;  // noteGrainOn
-
-            source.stop = source.stop || source.noteOff;                      // Set the instance of AudioBuffer
-
-            source.buffer = buffers[song[i]];                      // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+            source.start = source.start || source.noteGrainOn; // noteGrainOn
+            source.stop = source.stop || source.noteOff; // Set the instance of AudioBuffer
+            source.buffer = buffers[song[i]]; // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+            source.playbackrate.value = rate;
+            source.
 
             source.connect(gain);
             gain.connect(context.destination);
 
-            interval = source.buffer.duration - 0.05; //フライング
+            interval = source.buffer.duration / rate;
 
-            source.start(t0, 0, interval);
+            source.start(t0);
             t0 += interval;
             source.onended = (function (i) {
               return function () {
