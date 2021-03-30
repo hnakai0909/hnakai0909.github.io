@@ -218,7 +218,7 @@ function init_order(array, option) {
             source.connect(gain);
             gain.connect(context.destination);
 
-            interval = source.buffer.duration / rate;
+            interval = (source.buffer.duration - 0.045) / rate;
 
             source.start(t0);
             t0 += interval;
