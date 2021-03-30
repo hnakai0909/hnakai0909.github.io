@@ -50,7 +50,7 @@ function init_order(array, option) {
   // http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/audio
 
   var onDOMContentLoaded = function () {
-    let rate = 0;
+    let rate = 1; //デフォルト:等倍速
     const volumeSlider = document.getElementById('volume_slider');
     const rateSlider = document.getElementById('rate_slider');
     function updateRateSliderValue(){
