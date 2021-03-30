@@ -240,7 +240,7 @@ function initOrder(array, option) {
             if (isRateRandom){
               const sliderMax = parseFloat(rateSlider.max);
               const sliderMin = parseFloat(rateSlider.min);
-              const random_rate = pow(2, Math.random() * (sliderMax - sliderMin) + sliderMin);
+              const random_rate = Math.pow(2, Math.random() * (sliderMax - sliderMin) + sliderMin);
               source.playbackRate.value = random_rate;
               interval = (source.buffer.duration - 0.045) / random_rate;
             } else {
