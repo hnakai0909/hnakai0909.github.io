@@ -53,8 +53,8 @@ function initOrder(array, option) {
     let rate = 1; //デフォルト:等倍速
     const volumeSlider = document.getElementById('volume_slider');
     const rateSlider = document.getElementById('rate_slider');
-    function updateRateSliderValue(){
-      rate = Math.pow(2,parseFloat(rateSlider.value));
+    function updateRateSliderValue() {
+      rate = Math.pow(2, parseFloat(rateSlider.value));
       document.getElementById('rate_slider_value').innerText = "x" + rate.toFixed(2);
     }
 
@@ -75,6 +75,9 @@ function initOrder(array, option) {
 
     var livingSources = [];                           // will playing sources
     var sources = [];
+
+    var lastMode = "";
+
     var interval;  // sec
 
     var event = document.createEvent('Event');        // Create original event
@@ -128,14 +131,14 @@ function initOrder(array, option) {
       load('./audio/suumo_' + i + ".mp3", i);
     });
 
-    volumeSlider.addEventListener('input', function(){
+    volumeSlider.addEventListener('input', function () {
       //音量スライダーを動かしたとき
     });
-    
-    rateSlider.addEventListener('input', function(){
+
+    rateSlider.addEventListener('input', function () {
       //再生速度スライダーを動かしたとき
       updateRateSliderValue();
-      
+
     });
 
     document.querySelectorAll('button').forEach(function (button) {
@@ -170,41 +173,48 @@ function initOrder(array, option) {
 
         // Get base time
         var t0 = context.currentTime;
-
         var mode = this.id;
+        var createSumomi = true;
 
         lyrics = "";
         sources = [];
-        lyricElements = [];
-        var element = document.getElementById("box"); //歌詞表示リセット
-        while (element.firstChild) {
-          element.removeChild(element.firstChild);
+        if (mode === "normal" && lastMode === "normal") {
+          createSumomi = false;
+        } else {
+          lyricElements = [];
+          var element = document.getElementById("box"); //歌詞表示リセット
+          while (element.firstChild) {
+            element.removeChild(element.firstChild);
+          }
         }
+        lastMode = mode;
 
         gain.gain.value = volumeSlider.value;
 
-        addSuumo(t0, false);
+        addSuumo(t0, false, createSumomi);
         lyricElements[0].style.background = lyricBgStyleCurrent;
 
-        function addSuumo(startTime, withAppearanceAnimation) {
+        function addSuumo(startTime, withAppearanceAnimation, createSumomi) {
           initOrder(song, mode === "normal" ? "normal" : "random");
 
           var startIndex = sources.length;
-          suumo.forEach(function (value, i) { //歌詞表示
-            var sumomi = document.createElement("span");
-            document.getElementById("box").appendChild(sumomi);
-            sumomi.innerHTML = "" + suumo[song[i]];
-            lyricElements[startIndex + i] = sumomi;
-            lyrics += lyricPieces[song[i]];
+          if (createSumomi) {
+            suumo.forEach(function (value, i) { //歌詞表示
+              var sumomi = document.createElement("span");
+              document.getElementById("box").appendChild(sumomi);
+              sumomi.innerHTML = "" + suumo[song[i]];
+              lyricElements[startIndex + i] = sumomi;
+              lyrics += lyricPieces[song[i]];
 
-            if (withAppearanceAnimation) {
-              sumomi.style.transition = "opacity 0.3s linear";
-              sumomi.style.opacity = "0";
-              setTimeout(function () {
-                sumomi.style.opacity = "1";
-              }, 0);
-            }
-          });
+              if (withAppearanceAnimation) {
+                sumomi.style.transition = "opacity 0.3s linear";
+                sumomi.style.opacity = "0";
+                setTimeout(function () {
+                  sumomi.style.opacity = "1";
+                }, 0);
+              }
+            });
+          }
 
           var t0 = startTime;
 
@@ -233,7 +243,7 @@ function initOrder(array, option) {
                 }
 
                 if (mode === "infinity" && i === sources.length - 4) {
-                  addSuumo(t0, true)
+                  addSuumo(t0, true, true);
                 }
 
                 if (i < sources.length - 1) {
