@@ -1,4 +1,4 @@
-function init_order(array, option) {
+function initOrder(array, option) {
   //https://bost.ocks.org/mike/shuffle/
   var m = array.length, t, i;
   for (i = 0; i < m; i++) {
@@ -35,7 +35,7 @@ function init_order(array, option) {
     "スモ<i class='e4'></i>", "スモ<i class='e1'></i>",
     "ス〜〜〜モ<i class='e6'></i><i class='e7'></i>"
   ];
-  const lyric_pieces = [
+  const lyricPieces = [
     "あ❗️ スーモ❗️🌚",
     "ダン💥", "ダン💥", "ダン💥", "シャーン🎶",
     "スモ🌝", "スモ🌚", "スモ🌝", "スモ🌚",
@@ -71,7 +71,7 @@ function init_order(array, option) {
     var gain = context.createGain();          // for the instances of AudioBuffer
 
     var buffers = new Array(suumo.length);          // for the instances of AudioBufferSourceNode
-    var lyric_elements = new Array(suumo.length);
+    var lyricElements = new Array(suumo.length);
 
     var livingSources = [];                           // will playing sources
     var sources = [];
@@ -155,7 +155,7 @@ function init_order(array, option) {
           livingSources = [];
           sources = [];
           //赤反転を消す
-          lyric_elements.forEach(function (element) {
+          lyricElements.forEach(function (element) {
             element.style.background = lyricBGStyleNormal;
           });
           return;
@@ -175,7 +175,7 @@ function init_order(array, option) {
 
         lyrics = "";
         sources = [];
-        lyric_elements = [];
+        lyricElements = [];
         var element = document.getElementById("box"); //歌詞表示リセット
         while (element.firstChild) {
           element.removeChild(element.firstChild);
@@ -184,18 +184,18 @@ function init_order(array, option) {
         gain.gain.value = volumeSlider.value;
 
         addSuumo(t0, false);
-        lyric_elements[0].style.background = lyricBgStyleCurrent;
+        lyricElements[0].style.background = lyricBgStyleCurrent;
 
         function addSuumo(startTime, withAppearanceAnimation) {
-          init_order(song, mode === "normal" ? "normal" : "random");
+          initOrder(song, mode === "normal" ? "normal" : "random");
 
           var startIndex = sources.length;
           suumo.forEach(function (value, i) { //歌詞表示
             var sumomi = document.createElement("span");
             document.getElementById("box").appendChild(sumomi);
             sumomi.innerHTML = "" + suumo[song[i]];
-            lyric_elements[startIndex + i] = sumomi;
-            lyrics += lyric_pieces[song[i]];
+            lyricElements[startIndex + i] = sumomi;
+            lyrics += lyricPieces[song[i]];
 
             if (withAppearanceAnimation) {
               sumomi.style.transition = "opacity 0.3s linear";
@@ -228,8 +228,8 @@ function init_order(array, option) {
               return function () {
                 livingSources.splice(livingSources.indexOf(this), 1);
 
-                if (lyric_elements[i]) {
-                  lyric_elements[i].style.background = lyricBGStyleNormal;
+                if (lyricElements[i]) {
+                  lyricElements[i].style.background = lyricBGStyleNormal;
                 }
 
                 if (mode === "infinity" && i === sources.length - 4) {
@@ -237,7 +237,7 @@ function init_order(array, option) {
                 }
 
                 if (i < sources.length - 1) {
-                  lyric_elements[i + 1].style.background = lyricBgStyleCurrent;
+                  lyricElements[i + 1].style.background = lyricBgStyleCurrent;
                 }
 
                 if (livingSources.length === 0) {
