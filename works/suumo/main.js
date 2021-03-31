@@ -1,23 +1,3 @@
-function initOrder(array, option) {
-  //https://bost.ocks.org/mike/shuffle/
-  var m = array.length, t, i;
-  for (i = 0; i < m; i++) {
-    array[i] = i;
-  }
-  if (option == "random") {
-    // While there remain elements to shuffle…
-    while (m) {
-      // Pick a remaining element…
-      i = Math.floor(Math.random() * m--);
-
-      // And swap it with the current element.
-      t = array[m];
-      array[m] = array[i];
-      array[i] = t;
-    }
-  }
-};
-
 (function () {
   const lyricBGStyleNormal = 'transparent';
   const lyricBgStyleCurrent = 'rgba(255,0,0,0.5)';
@@ -43,6 +23,13 @@ function initOrder(array, option) {
     "スモ🌚", "スモ🌝", "スモ🌚", "スモ🌝",
     "スモ🌚", "スモ🌝", "ス〜〜〜モ⤵🌞"
   ];
+  const modes = {
+    'normal'   : 0,
+    'random'   : 1,
+    'infinity' : 2,
+  };
+  const noRandomModes = [0];  //基本的にはランダムモードが追加されていくことを想定
+
   var song = new Array(suumo.length);
   var lyrics = "";
 
@@ -79,9 +66,9 @@ function initOrder(array, option) {
     var lyricElements = new Array(suumo.length);
 
     var livingSources = [];                           // will playing sources
-    var sources = [];
+    var sources = [];                                 // sound players
 
-    var lastMode = "";
+    var lastModeId = undefined;
 
     var interval;  // sec
 
@@ -149,138 +136,198 @@ function initOrder(array, option) {
     rateRandomCheckbox.addEventListener('input', function(){
       //再生速度ランダムチェックボックスを操作したとき
       updateRateRandomCheckbox();
-      
+
     });
 
     document.querySelectorAll('button').forEach(function (button) {
       button.addEventListener('click', function () {
-        if (this.id == "tweet2") {
-          if (lyrics == "") {
-            window.alert("スーモ文字列が空のままです．再生してからツイートすることをおすすめします");
-          }
-          window.open('http://twitter.com/intent/tweet/?text=' + encodeURIComponent(lyrics.substring(0, 600)) + '&url=' + encodeURIComponent("http://hnakai0909.github.io/works/suumo/"));
-          return;
-        } else if (this.id == 'stop') {
-          //音の再生を止める
-          livingSources.forEach(function (source) {
-            source.onended = function () { };
-            source.stop(0);
-          });
-          livingSources = [];
-          sources = [];
-          //赤反転を消す
-          lyricElements.forEach(function (element) {
-            element.style.background = lyricBGStyleNormal;
-          });
-          return;
-        } else if (this.id == 'rate_reset') {
-          rateSlider.value = 0;
-          updateRateSliderValue();
-          return;
-        }
-        //以下，いずれかのあ！スーモ！再生ボタンのとき
-
-        context.resume();
-
-        // Get base time
-        var t0 = context.currentTime;
-        var mode = this.id;
-        var createSumomi = true;
-
-        lyrics = "";
-        sources = [];
-        if (mode === "normal" && lastMode === "normal") {
-          createSumomi = false;
-        } else {
-          lyricElements = [];
-          var element = document.getElementById("box"); //歌詞表示リセット
-          while (element.firstChild) {
-            element.removeChild(element.firstChild);
-          }
-        }
-        lastMode = mode;
-
-        gain.gain.value = volumeSlider.value;
-
-        addSuumo(t0, false, createSumomi);
-        lyricElements[0].style.background = lyricBgStyleCurrent;
-
-        function addSuumo(startTime, withAppearanceAnimation, createSumomi) {
-          initOrder(song, mode === "normal" ? "normal" : "random");
-
-          var startIndex = sources.length;
-          if (createSumomi) {
-            suumo.forEach(function (value, i) { //歌詞表示
-              var sumomi = document.createElement("span");
-              document.getElementById("box").appendChild(sumomi);
-              sumomi.innerHTML = "" + suumo[song[i]];
-              lyricElements[startIndex + i] = sumomi;
-              lyrics += lyricPieces[song[i]];
-
-              if (withAppearanceAnimation) {
-                sumomi.style.transition = "opacity 0.3s linear";
-                sumomi.style.opacity = "0";
-                setTimeout(function () {
-                  sumomi.style.opacity = "1";
-                }, 0);
-              }
-            });
-          }
-
-          var t0 = startTime;
-
-          suumo.forEach(function (value, i) {
-
-            source = context.createBufferSource();
-
-            source.start = source.start || source.noteGrainOn; // noteGrainOn
-            source.stop = source.stop || source.noteOff; // Set the instance of AudioBuffer
-            source.buffer = buffers[song[i]]; // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
-            
-            if (isRateRandom){
-              const sliderMax = parseFloat(rateSlider.max);
-              const sliderMin = parseFloat(rateSlider.min);
-              const random_rate = Math.pow(2, Math.random() * (sliderMax - sliderMin) + sliderMin);
-              source.playbackRate.value = random_rate;
-              interval = (source.buffer.duration - 0.045) / random_rate;
-            } else {
-              source.playbackRate.value = rate;
-              interval = (source.buffer.duration - 0.045) / rate;
+        switch (this.id) {
+          case 'tweet2':
+            if (lyrics === "") {
+              window.alert("スーモ文字列が空のままです．再生してからツイートすることをおすすめします");
             }
-
-            source.connect(gain);
-            gain.connect(context.destination);
-
-
-            source.start(t0);
-            t0 += interval;
-            source.onended = (function (i) {
-              return function () {
-                livingSources.splice(livingSources.indexOf(this), 1);
-
-                if (lyricElements[i]) {
-                  lyricElements[i].style.background = lyricBGStyleNormal;
-                }
-
-                if (mode === "infinity" && i === sources.length - 4) {
-                  addSuumo(t0, true, true);
-                }
-
-                if (i < sources.length - 1) {
-                  lyricElements[i + 1].style.background = lyricBgStyleCurrent;
-                }
-
-                if (livingSources.length === 0) {
-                  sources = [];
-                }
-              }
-            })(startIndex + i);
-            livingSources.push(source);
-            sources.push(source);
-          });
+            window.open('http://twitter.com/intent/tweet/?text=' + encodeURIComponent(lyrics.substring(0, 600)) + '&url=' + encodeURIComponent("http://hnakai0909.github.io/works/suumo/"));
+            break;
+          case 'stop':
+            stopSuumo();
+            break;
+          case 'rate_reset':
+            rateSlider.value = 0;
+            updateRateSliderValue();
+            break;
+          default:  //いずれかのあ！スーモ！再生ボタンのとき
+            startSuumo(this.id);
+            break;
         }
       }, false);
     });
+
+    //the departure of the suumo
+    function startSuumo(modeName){
+      context.resume();
+
+      // Get base time
+      const t0 = context.currentTime;
+      const modeId = modes[modeName];
+      const createSumomi = (modeId !== modes['normal'] || lastModeId !== modes['normal']);  //normalを2回連続で押した場合のみfalse
+
+      gain.gain.value = volumeSlider.value;
+
+      initSuumo(createSumomi, modeId);
+      addSuumo(t0, false, createSumomi, modeId);
+      activateLyricElement(0);
+    }
+
+    function initSuumo(createSumomi, modeId) {
+      lyrics = "";
+      sources = [];
+
+      //歌詞表示リセット
+      if (createSumomi) {
+        lyricElements = [];
+        let element = document.getElementById("box");
+        while (element.firstChild) {
+          element.removeChild(element.firstChild);
+        }
+      }
+      lastModeId = modeId;
+    }
+
+    //add suumo executor
+    function addSuumo(startTime, withAppearanceAnimation, createSumomi, modeId) {
+      initOrder(song, modeId);
+
+      const startIndex = sources.length;
+      if (createSumomi) {
+        createNextLyrics(startIndex, withAppearanceAnimation);
+      }
+
+      registerSources(startTime, startIndex, modeId);
+    }
+
+    //init the "song" variable
+    function initOrder(array, modeId) {
+      //https://bost.ocks.org/mike/shuffle/
+      let m = array.length, t, i;
+      for (i = 0; i < m; i++) {
+        array[i] = i;
+      }
+      if (!noRandomModes.includes(modeId)) {
+        // While there remain elements to shuffle…
+        while (m) {
+          // Pick a remaining element…
+          i = Math.floor(Math.random() * m--);
+
+          // And swap it with the current element.
+          t = array[m];
+          array[m] = array[i];
+          array[i] = t;
+        }
+      }
+    }
+
+    function createNextLyrics(startIndex, withAppearanceAnimation) {
+      suumo.forEach(function (value, i) { //歌詞表示
+        let sumomi = document.createElement("span");
+        document.getElementById("box").appendChild(sumomi);
+        sumomi.innerHTML = "" + suumo[song[i]];
+        lyricElements[startIndex + i] = sumomi;
+        lyrics += lyricPieces[song[i]];
+
+        if (withAppearanceAnimation) {
+          sumomi.style.transition = "opacity 0.3s linear";
+          sumomi.style.opacity = "0";
+          setTimeout(function () {
+            sumomi.style.opacity = "1";
+          }, 0);
+        }
+      });
+    }
+
+    //get speed
+    function getCurrentRate() {
+      if (!isRateRandom) {
+        return rate;
+      }
+      const sliderMax = parseFloat(rateSlider.max);
+      const sliderMin = parseFloat(rateSlider.min);
+      return Math.pow(2, Math.random() * (sliderMax - sliderMin) + sliderMin);
+    }
+
+    //the timing of additional lyrics when infinity mode
+    function isAlmostFinishOfSuumo(index) {
+      return index === sources.length - 4;
+    }
+
+    //register sources that manage sound and current position
+    function registerSources(startTime, startIndex, modeId) {
+      let t0 = startTime;
+      suumo.forEach(function (value, i) {
+        let source = context.createBufferSource();
+
+        source.start = source.start || source.noteGrainOn; // noteGrainOn
+        source.stop = source.stop || source.noteOff; // Set the instance of AudioBuffer
+        source.buffer = buffers[song[i]]; // AudioBufferSourceNode (Input) -> GainNode (Master Volume) -> AudioDestinationNode (Output)
+
+        const currentRate = getCurrentRate();   //speed
+        source.playbackRate.value = currentRate;
+        interval = (source.buffer.duration - 0.045) / currentRate;
+
+        source.connect(gain);
+        gain.connect(context.destination);
+
+        source.start(t0);
+        t0 += interval;
+
+        source.onended = (function (index) {
+          return function () {
+            livingSources.splice(livingSources.indexOf(this), 1);
+
+            if (lyricElements[index]) {
+              deactivateLyricElement(index);
+            }
+
+            if (modeId === modes['infinity'] && isAlmostFinishOfSuumo(index)) {
+              addSuumo(t0, true, true, modeId);
+            }
+
+            if (index < sources.length - 1) {
+              activateLyricElement(index+1);
+            }
+
+            if (livingSources.length === 0) {
+              sources = [];
+            }
+          }
+        })(startIndex + i);
+        livingSources.push(source);
+        sources.push(source);
+      });
+    }
+
+    function stopSuumo() {
+      //音の再生を止める
+      livingSources.forEach(function (source) {
+        source.onended = function () { };
+        source.stop(0);
+      });
+      livingSources = [];
+      sources = [];
+      //赤反転を消す
+      lyricElements.forEach(function (element, index) {
+        deactivateLyricElement(index);
+      });
+    }
+
+    //赤反転させる
+    function activateLyricElement(index) {
+      lyricElements[index].style.background = lyricBgStyleCurrent;
+    }
+
+    //赤反転を消す
+    function deactivateLyricElement(index) {
+      lyricElements[index].style.background = lyricBGStyleNormal;
+    }
   };
   if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {
     onDOMContentLoaded();
