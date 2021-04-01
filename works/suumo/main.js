@@ -50,6 +50,7 @@
     }
     function updateRateRandomCheckbox() {
       isRateRandom = rateRandomCheckbox.checked;
+      rateSlider.disabled = isRateRandom;
     }
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
