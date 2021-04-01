@@ -1,6 +1,6 @@
 (function () {
-  const lyricBGStyleNormal = 'transparent';
-  const lyricBgStyleCurrent = 'rgba(255,0,0,0.5)';
+  const lyricBgStyleInactive = 'transparent';
+  const lyricBgStyleActive = 'rgba(255,0,0,0.5)';
 
   const suumo = [
     "あ❗️スーモ❗️<i class='e1'></i>",
@@ -31,7 +31,7 @@
   const noRandomModes = [0];  //基本的にはランダムモードが追加されていくことを想定
 
   var song = new Array(suumo.length);
-  var lyrics = "";
+  var lyricsText = "";
 
   // from:http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/demos/demo-08
   // http://curtaincall.weblike.jp/portfolio-web-sounder/webaudioapi-basic/audio
@@ -143,10 +143,10 @@
       button.addEventListener('click', function () {
         switch (this.id) {
           case 'tweet2':
-            if (lyrics === "") {
+            if (lyricsText === "") {
               window.alert("スーモ文字列が空のままです．再生してからツイートすることをおすすめします");
             }
-            window.open('http://twitter.com/intent/tweet/?text=' + encodeURIComponent(lyrics.substring(0, 600)) + '&url=' + encodeURIComponent("http://hnakai0909.github.io/works/suumo/"));
+            window.open('http://twitter.com/intent/tweet/?text=' + encodeURIComponent(lyricsText.substring(0, 600)) + '&url=' + encodeURIComponent("http://hnakai0909.github.io/works/suumo/"));
             break;
           case 'stop':
             stopSuumo();
@@ -179,7 +179,7 @@
     }
 
     function initSuumo(createSumomi, modeId) {
-      lyrics = "";
+      lyricsText = "";
       sources = [];
 
       //歌詞表示リセット
@@ -232,7 +232,7 @@
         document.getElementById("box").appendChild(sumomi);
         sumomi.innerHTML = "" + suumo[song[i]];
         lyricElements[startIndex + i] = sumomi;
-        lyrics += lyricPieces[song[i]];
+        lyricsText += lyricPieces[song[i]];
 
         if (withAppearanceAnimation) {
           sumomi.style.transition = "opacity 0.3s linear";
@@ -254,7 +254,7 @@
       return Math.pow(2, Math.random() * (sliderMax - sliderMin) + sliderMin);
     }
 
-    //the timing of additional lyrics when infinity mode
+    //the timing of additional lyricsText when infinity mode
     function isAlmostFinishOfSuumo(index) {
       return index === sources.length - 4;
     }
@@ -321,12 +321,13 @@
 
     //赤反転させる
     function activateLyricElement(index) {
-      lyricElements[index].style.background = lyricBgStyleCurrent;
+      lyricElements[index].style.background = lyricBgStyleActive;
     }
 
     //赤反転を消す
+    //InactiveにすることをDeactivateといい，DeactiveやInactivateとは言わないそうで．まぎらわしいね
     function deactivateLyricElement(index) {
-      lyricElements[index].style.background = lyricBGStyleNormal;
+      lyricElements[index].style.background = lyricBgStyleInactive;
     }
   };
   if ((document.readyState === 'interactive') || (document.readyState === 'complete')) {
