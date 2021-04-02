@@ -41,6 +41,7 @@
   var onDOMContentLoaded = function () {
     let rate = 1;  // デフォルト:等倍速
     let isRateRandom = false;  // デフォルト:再生速度ランダムじゃない
+    let volume = 0.7; // デフォルト:70%
     const volumeSlider = document.getElementById('volume_slider');
     const rateSlider = document.getElementById('rate_slider');
     const rateRandomCheckbox = document.getElementById('rate_random_checkbox');
@@ -52,7 +53,11 @@
       isRateRandom = rateRandomCheckbox.checked;
       rateSlider.disabled = isRateRandom;
     }
-
+    function updateVolumeSliderValue() {
+      volume = volumeSlider.value;
+      document.getElementById('volume_slider_value').innerText = Math.round(volume * 100) + "%";
+    }
+    
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     try {  // Create the instance of AudioContext
       var context = new AudioContext();
@@ -128,6 +133,8 @@
 
     volumeSlider.addEventListener('input', function () {
       // 音量スライダーを動かしたとき
+      updateVolumeSliderValue();
+
     });
 
     rateSlider.addEventListener('input', function () {
