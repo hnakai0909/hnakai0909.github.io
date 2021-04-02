@@ -166,6 +166,10 @@
             rateSlider.value = 0;
             updateRateSliderValue();
             break;
+          case 'volume_reset':
+            volumeSlider.value = 0.7;
+            updateVolumeSliderValue();
+            break;
           default:  // いずれかのあ！スーモ！再生ボタンのとき
             startSuumo(this.id);
             break;
