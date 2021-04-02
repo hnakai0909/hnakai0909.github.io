@@ -31,8 +31,9 @@
     'normal': 0,
     'random': 1,
     'infinity': 2,
+    'infinity-normal': 3,
   };
-  const noRandomModes = [0];  // 基本的にはランダムモードが追加されていくことを想定
+  const noRandomModes = [0, 3];  // 基本的にはランダムモードが追加されていくことを想定
 
   var song = new Array(suumo.length);
   var lyricsText = "";
@@ -297,7 +298,7 @@
               deactivateLyricElement(index);
             }
 
-            if (modeId === modes['infinity'] && isAlmostFinishOfSuumo(index)) {
+            if ((modeId === modes['infinity'] || modeId === modes['infinity-normal']) && isAlmostFinishOfSuumo(index)) {
               addSuumo(t0, true, true, modeId);
             }
 
