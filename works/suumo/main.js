@@ -205,23 +205,23 @@
     }
 
     // add suumo executor
-    function addSuumo(startTime, withAppearanceAnimation, createSumomi, modeId) {
-      initOrder(song, modeId);
+    function addSuumo(startTime, withAppearanceAnimation, createSumomi, modeId, startPiecesNo = 0) {
+      initOrder(song, modeId, startPiecesNo);
 
       const startIndex = sources.length;
       if (createSumomi) {
-        createNextLyrics(startIndex, withAppearanceAnimation);
+        createNextLyrics(startIndex, withAppearanceAnimation, startPiecesNo);
       }
 
-      registerSources(startTime, startIndex, modeId);
+      registerSources(startTime, startIndex, modeId, startPiecesNo);
     }
 
     // init the "song" variable
-    function initOrder(array, modeId) {
+    function initOrder(array, modeId, startPiecesNo) {
       // https://bost.ocks.org/mike/shuffle/
-      let m = array.length, t, i;
+      let m = array.length - startPiecesNo, t, i;
       for (i = 0; i < m; i++) {
-        array[i] = i;
+        array[i] = i + startPiecesNo;
       }
       if (!noRandomModes.includes(modeId)) {
         // While there remain elements to shuffle…
@@ -237,8 +237,9 @@
       }
     }
 
-    function createNextLyrics(startIndex, withAppearanceAnimation) {
+    function createNextLyrics(startIndex, withAppearanceAnimation, startPiecesNo = 0) {
       suumo.forEach(function (value, i) {  // 歌詞表示
+        if (suumo.length - startPiecesNo <= i) return; // ふつう無限モード対応(2ループ目以降用に処理を打ち切る処理追加)
         let sumomi = document.createElement("span");
         document.getElementById("box").appendChild(sumomi);
         sumomi.innerHTML = "" + suumo[song[i]];
@@ -271,9 +272,10 @@
     }
 
     // register sources that manage sound and current position
-    function registerSources(startTime, startIndex, modeId) {
+    function registerSources(startTime, startIndex, modeId, startPiecesNo = 0) {
       let t0 = startTime;
       suumo.forEach(function (value, i) {
+        if (suumo.length - startPiecesNo <= i) return; // ふつう無限モード対応(2ループ目以降用に処理を打ち切る処理追加)
         let source = context.createBufferSource();
 
         source.start = source.start || source.noteGrainOn;  // noteGrainOn
@@ -298,8 +300,14 @@
               deactivateLyricElement(index);
             }
 
-            if ((modeId === modes['infinity'] || modeId === modes['infinity-normal']) && isAlmostFinishOfSuumo(index)) {
+            if (modeId === modes['infinity'] && isAlmostFinishOfSuumo(index)) {
+              // ランダム無限
               addSuumo(t0, true, true, modeId);
+            }
+
+            if (modeId === modes['infinity-normal'] && isAlmostFinishOfSuumo(index)) {
+              // ふつう無限 スーモ追加は、前奏部分(suumo配列最初の5要素)以降のみとする
+              addSuumo(t0, true, true, modeId ,5);
             }
 
             if (index < sources.length - 1) {
