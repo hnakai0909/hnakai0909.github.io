@@ -29,7 +29,7 @@
       var now = new Date();
       var age = now.getFullYear() - birthday.getFullYear();
       if( (now.getMonth() < birthday.getMonth()) ||
-          ( (now.getMonth() == birthday.getMonth()) && (now.getDate() < now.getDate()) )
+          ( (now.getMonth() == birthday.getMonth()) && (now.getDate() < birthday.getDate()) )
       ){
         age = age - 1;
       };
