@@ -84,53 +84,29 @@
     var event = document.createEvent('Event');  // Create original event
     event.initEvent('complete', true, true);  // Get ArrayBuffer by Ajax
 
-    var load = function (url, index) {
-      var xhr = new XMLHttpRequest();
-
-      xhr.timeout = 30000;  // Timeout (30sec)
-      xhr.ontimeout = function () {
-        window.alert('Timeout.');
-      };
-      xhr.onerror = function () { };
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          var arrayBuffer = xhr.response;  // Get ArrayBuffer
-
-          if (arrayBuffer instanceof ArrayBuffer) {  // The 2nd argument for decodeAudioData
-
-            var successCallback = function (audioBuffer) {  // Get the instance of AudioBuffer
-
-              buffers[index] = audioBuffer;  // The loading instances of AudioBuffer has completed ?
-
-              for (var i = 0, len = buffers.length; i < len; i++) {
-                if (buffers[i] === undefined) {
-                  return;
-                }
-              }  // dispatch 'complete' event
-
-              document.querySelector('button').dispatchEvent(event);
-            };  // The 3rd argument for decodeAudioData
-
-            var errorCallback = function (error) {
-              if (error instanceof Error) {
-                window.alert(error.message);
-              } else {
-                window.alert('Error : "decodeAudioData" method.');
-              }
-            };  // Create the instance of AudioBuffer (Asynchronously)
-
-            context.decodeAudioData(arrayBuffer, successCallback, errorCallback);
-          }
-        }
-      };
-      xhr.open('GET', url, true);
-      xhr.responseType = 'arraybuffer';
-      xhr.send(null);
+    // fetch audio data and return it as audio buffer
+    async function load(url) {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await context.decodeAudioData(arrayBuffer);
+      return audioBuffer;
     };
 
-    suumo.forEach(function (value, i) {
-      load('./audio/suumo_' + i + ".mp3", i);
-    });
+    const allAudioLoadingPromise = Promise.all(suumo.map(function (value, i) {
+      return load('./audio/suumo_' + i + ".mp3");
+    }));
+
+    allAudioLoadingPromise
+      .then(function (audioBuffers) {
+        buffers = audioBuffers;
+        document.querySelector('button').dispatchEvent(event);
+      })
+      .catch(function (error) {
+        window.alert(error.message);
+      });
 
     volumeSlider.addEventListener('input', function () {
       // 音量スライダーを動かしたとき
