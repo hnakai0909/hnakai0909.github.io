@@ -56,6 +56,9 @@
     }
     function updateVolumeSliderValue() {
       volume = volumeSlider.value;
+      if (gain) {
+        gain.gain.value = volumeSlider.value;
+      }
       document.getElementById('volume_slider_value').innerText = Math.round(volume * 100) + "%";
     }
     
