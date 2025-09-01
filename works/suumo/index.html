@@ -10,6 +10,20 @@
       background-color: #CE7;
     }
 
+    body.dark {
+      background-color: #1f663c;
+      color: #eee;
+    }
+
+    body.dark #box {
+      background: rgb(27, 95, 50);
+    }
+
+
+    body.dark a {
+      color: rgb(0, 255, 255);
+    }
+
     i {
       text-indent: 1em;
       background-repeat: no-repeat;
@@ -53,6 +67,7 @@
 </head>
 
 <body>
+  <button id="toggle_dark" style="width:100px;height:40px;">Light/Dark</button>
   <div id="caution">ボタンを押すと音が出ます。音量にご注意ください。</div>
   <button type="button" id="normal" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ふつう)</button>
   <button type="button" id="random" style="width:600px;height:80px;font-size:45px;">あ！スーモ！(ランダム)</button>
