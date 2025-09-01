@@ -38,7 +38,6 @@
   var song = new Array(suumo.length);
   var lyricsText = "";
 
-
   var onDOMContentLoaded = function () {
     let rate = 1;  // デフォルト:等倍速
     let isRateRandom = false;  // デフォルト:再生速度ランダムじゃない
@@ -46,6 +45,18 @@
     const volumeSlider = document.getElementById('volume_slider');
     const rateSlider = document.getElementById('rate_slider');
     const rateRandomCheckbox = document.getElementById('rate_random_checkbox');
+    // ダークモード切替
+    const darkButton = document.getElementById("toggle_dark");
+
+    // 初期状態（localStorageを参照）
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
+    }
+
+    darkButton.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+    });
     function updateRateSliderValue() {
       rate = Math.pow(2, parseFloat(rateSlider.value));
       document.getElementById('rate_slider_value').innerText = "x" + rate.toFixed(2);
@@ -131,6 +142,9 @@
 
     document.querySelectorAll('button').forEach(function (button) {
       button.addEventListener('click', function () {
+        // ダークモードボタンは無視
+        if (this.id === 'toggle_dark') return;
+
         switch (this.id) {
           case 'tweet2':
             if (lyricsText === "") {
@@ -145,7 +159,7 @@
             rateSlider.value = 0;
             updateRateSliderValue();
             break;
-          default:  // いずれかのあ！スーモ！再生ボタンのとき
+          default:  // スーモ再生ボタンたち
             startSuumo(this.id);
             break;
         }
